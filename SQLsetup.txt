@@ -1,0 +1,21 @@
+CREATE DATABASE quizzosaurus;
+USE quizzosaurus;
+CREATE TABLE users(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    admin BOOLEAN NOT NULL,
+    elo int not null
+);
+INSERT INTO Users (username, email, password, admin, elo) VALUES ("admin", "ad.min@allrights.com", "free_EntryPass01", 1, 0);
+CREATE TABLE questions(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    question VARCHAR(255) NOT NULL,
+    category VARCHAR(255) NOT NULL,
+    res1 VARCHAR(255) NOT NULL,
+    res2 VARCHAR(255) NOT NULL,
+    res3 VARCHAR(255) NOT NULL,
+    res4 VARCHAR(255) NOT NULL,
+    correct int NOT NULL
+);

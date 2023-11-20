@@ -1,7 +1,5 @@
 const port = 8080;
-const secretKey = 'oftidyifuompùilyuktjdrhsdyjfukiloitdrehrqqstr,c;v:m-dtyjch,gjvfuktdyjrshdjyh,g';
-const adminUsername = 'admin';
-const admindPassword = 'password';
+const secretKey = 'oftidyifuom<-z654thtgspùilyuktjdrhsdyjfuki34loitdrehrqqstr,c;v:m-dty2jch,gjvfuktd7yjrshdjyh,g';
 
 var createError = require('http-errors');
 var express = require('express');
@@ -12,6 +10,7 @@ var logger = require('morgan');
 var cors = require('cors');
 var bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
+const mysql = require('mysql2');
 
 var server = express();
 
@@ -20,8 +19,8 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 server.use(cookieParser());
 server.use(express.static(path.join(__dirname, 'public')));
-server.use(cors())
-server.use(bodyParser.json())
+server.use(cors());
+server.use(bodyParser.json());
 
 server.get('/', (req, res) => {
     res.send('Hello World!');
@@ -43,7 +42,7 @@ server.get('/', (req, res) => {
 
 function generateToken(username) {
     const payload = { username };
-    const options = { expiresIn: '5m' };
+    const options = { expiresIn: '1h' };
     return jwt.sign(payload, secretKey, options);
 }
 
@@ -58,7 +57,6 @@ function verifyToken(token) {
 
 /* =========================== SQL setup =========================== */
 
-const mysql = require('mysql2');
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
