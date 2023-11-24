@@ -1,0 +1,36 @@
+.trice {
+    height: 42px;
+    margin:0;
+}
+
+#title{
+    margin:0;
+}
+
+
+ul {
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style-type: none;
+  background-color:rgb(215, 197, 135) ;
+}
+
+li {
+  float: right;
+}
+
+li a {
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: rgb(183, 165, 107);
+}

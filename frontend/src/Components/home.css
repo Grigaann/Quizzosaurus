@@ -1,0 +1,16 @@
+.Home {
+    width:100%;
+    background-color: rgb(242, 227, 174) ;
+}
+
+img {
+    margin-top:10%;
+    height: 10%;
+    width: auto;
+}
+
+.center {
+    margin-left:auto;
+    margin-right:auto;
+
+}
