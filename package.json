@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "client": "cd frontend && npm run start",
     "server": "cd backend && node server.js",
     "dev": "concurrently --kill-others \"npm run server\" \"npm run client\""
@@ -12,6 +11,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "@babel/core": "^7.16.7",
+    "@babel/preset-env": "^7.16.7",
+    "babel-loader": "^8.2.3",
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.5"
   }
 }
