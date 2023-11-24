@@ -1,5 +1,4 @@
 const port = 8080;
-const secretKey = 'oftidyifuom<-z654thtgspùilyuktjdrhsdyjfuki34loitdrehrqqstr,c;v:m-dty2jch,gjvfuktd7yjrshdjyh,g';
 
 var createError = require('http-errors');
 var express = require('express');
@@ -9,11 +8,9 @@ var jwt = require('jsonwebtoken');
 var logger = require('morgan');
 var cors = require('cors');
 var bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
 const mysql = require('mysql2');
 
 var server = express();
-
 server.use(logger('dev'));
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
@@ -21,6 +18,10 @@ server.use(cookieParser());
 server.use(express.static(path.join(__dirname, 'public')));
 server.use(cors());
 server.use(bodyParser.json());
+
+server.set('views', __dirname, '/Components')
+server.set('view engine', 'jsx');
+server.engine('jsx', require('express-react-views').createEngine());
 
 server.get('/', (req, res) => {
     res.send('Hello World!');
@@ -34,11 +35,18 @@ server.listen(port, () => {
 
 
 server.get('/', (req, res) => {
-    res.render("landing_page");
+    res.render("App");
+});
+server.get('/register', (req, res) => {
+    res.render("register");
+});
+server.get('/login', (req, res) => {
+    res.render('login');
 });
 
-
 /* =========================== TOKEN setup =========================== */
+
+const secretKey = 'oftidyifuom<-z654thtgspùilyuktjdrhsdyjfuki34loitdrehrqqstr,c;v:m-dty2jch,gjvfuktd7yjrshdjyh,g';
 
 function generateToken(username) {
     const payload = { username };
@@ -68,6 +76,43 @@ db.connect((err) => {
     console.log('Connected to database');
 });
 
+
+//------- Add query -------
+server.post('/api/signup', (req, res) => {
+    const { username, password, email } = req.body;
+
+    db.query("SELECT * FROM users WHERE username LIKE ?", [username], (err, result) => {
+        if (err) throw err;
+        if (result.length == 0) {
+            db.query('INSERT INTO users (username, password, email, admin, elo) VALUES (?, ?, ?, 0, 0)', [username, password, email], (err) => {
+                if (err) throw err;
+                res.redirect('/login');
+            });
+        } else {
+            console.log('This username is already taken');
+            res.send("<script>alert('This username is already taken')</script>");
+        } 
+    });
+});
+
+//------- Verify query ------
+
+
+
+//------- Login query ------
+server.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    db.query("SELECT * FROM users WHERE username LIKE ?", [username], (err, result) => {
+        if (err) throw err;
+        try {
+            if (bcrypt.compareSync(password, result[0].password)) {
+                res.cookie('token', generateToken(username), { httpOnly: true });
+                res.redirect("/");
+            }
+            else res.redirect("/login");
+        } catch (err) { res.redirect("/register") }
+    });
+});
 
 /* =========================== THE END =========================== */
 
