@@ -36,6 +36,9 @@ server.listen(port, () => {
 server.get('/', (req, res) => {
     res.render("landing_page");
 });
+server.get('/profile', (req,res) => {
+    res.render('profile');
+});
 
 
 /* =========================== TOKEN setup =========================== */
