@@ -9,6 +9,7 @@ var logger = require('morgan');
 var cors = require('cors');
 var bodyParser = require('body-parser');
 const mysql = require('mysql2');
+const bcrypt = require('bcrypt');
 
 var server = express();
 server.use(logger('dev'));
@@ -30,20 +31,6 @@ server.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
 
-
-/* =========================== ROUTES setup =========================== */
-
-
-server.get('/', (req, res) => {
-    res.render("App");
-});
-server.get('/register', (req, res) => {
-    res.render("register");
-});
-server.get('/login', (req, res) => {
-    res.render('login');
-});
-
 /* =========================== TOKEN setup =========================== */
 
 const secretKey = 'oftidyifuom<-z654thtgspùilyuktjdrhsdyjfuki34loitdrehrqqstr,c;v:m-dty2jch,gjvfuktd7yjrshdjyh,g';
@@ -59,7 +46,7 @@ function verifyToken(token) {
         const decoded = jwt.verify(token, secretKey);
         return decoded.username;
     } catch (err) {
-        return null; // Token is invalid or expired 
+        return null;
     }
 }
 
@@ -76,46 +63,82 @@ db.connect((err) => {
     console.log('Connected to database');
 });
 
+const util = require('util');
+const query = util.promisify(db.query).bind(db);
 
-//------- Add query -------
-server.post('/api/signup', (req, res) => {
-    const { username, password, email } = req.body;
+//------- Search User in db ------
+async function findUser(username, email) {
+    try {
+        const users = await query("SELECT username, email FROM users WHERE LOWER(username) = LOWER(?) OR LOWER(email) = LOWER(?)", [username, email]);
+        return (users.length > 0);
+    } catch (error) {
+        console.error('Error finding user:', error);
+        throw error;
+    }
+}
 
-    db.query("SELECT * FROM users WHERE username LIKE ?", [username], (err, result) => {
-        if (err) throw err;
-        if (result.length == 0) {
-            db.query('INSERT INTO users (username, password, email, admin, elo) VALUES (?, ?, ?, 0, 0)', [username, password, email], (err) => {
-                if (err) throw err;
-                res.redirect('/login');
-            });
-        } else {
-            console.log('This username is already taken');
-            res.send("<script>alert('This username is already taken')</script>");
-        } 
-    });
+server.post('/api/checkUser', async (req, res) => {
+    const { username, email } = req.body;
+
+    if (!username || !email) {
+        return res.status(400).json({ error: 'Username and email are required.' });
+    }
+    const availbl = !(await findUser(username, email));
+    res.json({ available: availbl });
 });
 
-//------- Verify query ------
+//---------- Register query ----------
+server.post('/api/signup', async (req, res) => {
+    const { username, email, password } = req.body;
 
+    if (!username || !email || !password) {
+        return res.status(400).json({ error: 'Username, email, and password are required.' });
+    }
 
+    try {
+        const userExists = await findUser(username, email);
+        if (userExists) {
+            return res.status(401).json({ error: 'Username or email already taken.' });
+        }
 
-//------- Login query ------
-server.post('/login', (req, res) => {
-    const { username, password } = req.body;
-    db.query("SELECT * FROM users WHERE username LIKE ?", [username], (err, result) => {
-        if (err) throw err;
-        try {
-            if (bcrypt.compareSync(password, result[0].password)) {
-                res.cookie('token', generateToken(username), { httpOnly: true });
-                res.redirect("/");
-            }
-            else res.redirect("/login");
-        } catch (err) { res.redirect("/register") }
-    });
+        await query('INSERT INTO users (username, email, password, admin, elo) VALUES (?, ?, ?, 0, 0)', [username, email, password]);
+        res.status(200).json({ success: true, redirection: '/login' });
+    } catch (err) {
+        console.error('Error during signup:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
+
+
+//---------- Login query ---------
+server.post('/api/login', async (req, res) => {
+    const { username, email, password } = req.body;
+
+    if (!username || !email || !password) {
+        return res.status(400).json({ error: 'Username and password are required.' });
+    }
+    try {
+        const userExists = await findUser(username, email);
+        if (!userExists) {
+            return res.status(401).json({ error: 'Invalid username.' });
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+            return res.status(401).json({ error: 'Invalid password.' });
+        }
+
+        const token = generateToken(username);
+        res.json({ token, redirection: '/error' });
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 
 /* =========================== THE END =========================== */
-
 
 
 // catch 404 and forward to error handler
@@ -133,5 +156,20 @@ server.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+
+/* =========================== ROUTES setup =========================== */
+
+
+server.get('/', (req, res) => {
+    res.render("App");
+});
+server.get('/register', (req, res) => {
+    res.render("register");
+});
+server.get('/login', (req, res) => {
+    res.render('login');
+});
+
 
 module.exports = server;
