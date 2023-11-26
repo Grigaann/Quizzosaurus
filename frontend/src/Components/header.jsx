@@ -7,14 +7,30 @@ import './header.css';
 export default function Header() {
     return (
         <header className='header'>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
           <ul>
             <img src={trice} className="trice" alt="logo" />
             <h2 id="title">Quizzosaurus</h2>
-            <li><Link to='/profile'><strong>Profile</strong></Link></li>
-            <li><a href='/'><strong>ScoreBoard</strong></a></li>
-            <li><a href='/'><strong>Quiz</strong></a></li>
-            <li><a href='/'><strong>About us</strong></a></li>
-            <li><a href='/'><strong>Home</strong></a></li>
+            
+            <div className='navbar'>
+             
+              <div className='dropdown'>
+
+                <button className='dropbtn'><strong>Menu</strong> 
+                <i className='fa fa-caret-down'></i>
+                </button>
+                
+                <div className='dropdown-content'>
+                  <a href='/'><strong>Home</strong></a>
+                  <Link to='/profile'><strong>Profile</strong></Link>
+                  <a href='/'><strong>About us</strong></a>
+                </div>
+
+              </div>
+              <li><a href='/'><strong>ScoreBoard</strong></a></li>
+              <li><a href='/'><strong>Quiz</strong></a></li>  
+
+            </div>
           </ul>
         </header>
     );

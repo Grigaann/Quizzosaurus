@@ -9,8 +9,16 @@ export default function LandingPage() {
     return (
         <div className="Home">
             <Header />
-            <img src={logo192} className="center" alt="logo" />
-            <p className='center'><br/>Put the fucking REGISTER FORM <Link to="/register">THERE</Link></p>
+            <img src={logo192} alt="logo" />
+            <p className='par'><br/><br/>Welcome to <strong>Quizzozaurus</strong>!<br/><br/>
+            To be able to play, you must have an account.</p>
+            
+            <div className="btns">
+                <button><Link to="/register">LOGIN</Link></button>
+                <p><strong>|</strong></p> 
+                <button><Link to="/register">REGISTER</Link></button>
+            </div>
+
             <Footer />
         </div>
     );
