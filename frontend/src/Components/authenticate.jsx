@@ -1,40 +1,40 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios';
-import bcrypt from 'bcryptjs';
 
-export default function Login() {
+import useLocalState from '../util/useLocalStorage';
+
+import axios from 'axios';
+
+export default function Authenticate() {
+    const [token, setToken] = useLocalState(null, "jwt");
     const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         try {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            await axios.post('http://localhost:8080/api/login', {
+            const response = await axios.post('http://localhost:8080/api/login', {
                 username: username,
-                email: email,
-                password: hashedPassword
-            })
-                .then((response) => {
-                    if (response.data.token) {
-                        console.log('Login successful! Token:', response.data.token);
-                        navigate(response.data.redirection);
-                    } else {
-                        console.log('Login failed.');
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+                password: password
+            });
+    
+            if (response.data.token) {
+                console.log('Login successful! Token:', response.data.token);
+                setToken(response.data.token);
+                navigate(response.data.redirection);
+            } else {
+                console.log('Login failed.');
+                setError(response.data.error || 'Login failed. Please try again');
+            }
         } catch (error) {
-            setError('Invalid username or password.');
+            console.error('Error during login:', error);
+            setError('Login failed. Please try again.');
         }
-    }
+        return token
+    };
     return (
         <>
             <form onSubmit={handleSubmit}>
@@ -42,10 +42,6 @@ export default function Login() {
                 <label>
                     Username:
                     <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} autoComplete='off' required />
-                </label>
-                <label>
-                    Email:
-                    <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete='off' required />
                 </label>
                 <label>
                     Password:

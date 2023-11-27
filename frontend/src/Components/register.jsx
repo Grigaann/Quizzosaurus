@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+
 import axios from 'axios';
 import bcrypt from 'bcryptjs';
 
 export default function Register() {
+    const [loading, setLoading] = useState(true);
+
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -74,10 +77,10 @@ export default function Register() {
                     <input type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete='off' required />
                 </label>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button type="submit">Sign up</button>
+                {loading ? <button type="submit">Sign up</button> : <button disabled>Loading...</button>}
             </form>
             <section>
-                <p>Already have an account? <Link to='/login'>Login instead</Link></p>
+                <p>Already have an account? <Link to='/authenticate'>Login instead</Link></p>
             </section>
         </>
     );

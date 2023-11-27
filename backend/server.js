@@ -50,6 +50,11 @@ function verifyToken(token) {
     }
 }
 
+server.get('/api/validate/:token'), (req, res) => {
+    const token = req.cookies.token;
+    res.json({ isValidated: verifyToken(token) });
+}
+
 /* =========================== SQL setup =========================== */
 
 const db = mysql.createConnection({
@@ -67,10 +72,13 @@ const util = require('util');
 const query = util.promisify(db.query).bind(db);
 
 //------- Search User in db ------
-async function findUser(username, email) {
+async function findUser(username, email = undefined) {
     try {
-        const users = await query("SELECT username, email FROM users WHERE LOWER(username) = LOWER(?) OR LOWER(email) = LOWER(?)", [username, email]);
-        return (users.length > 0);
+        const users = await query("SELECT * FROM users WHERE LOWER(username) = LOWER(?) OR LOWER(email) = LOWER(?)", [username, email]);
+        for (var user of users) {
+            if (user.username === username || user.email === email)
+                return user;
+        }
     } catch (error) {
         console.error('Error finding user:', error);
         throw error;
@@ -83,7 +91,8 @@ server.post('/api/checkUser', async (req, res) => {
     if (!username || !email) {
         return res.status(400).json({ error: 'Username and email are required.' });
     }
-    const availbl = !(await findUser(username, email));
+    const userFound = await findUser(username, email);
+    const availbl = (!userFound || userFound.length === 0);
     res.json({ available: availbl });
 });
 
@@ -96,45 +105,62 @@ server.post('/api/signup', async (req, res) => {
     }
 
     try {
-        const userExists = await findUser(username, email);
-        if (userExists) {
+        const userFound = await findUser(username,email);
+        if (userFound) {
             return res.status(401).json({ error: 'Username or email already taken.' });
         }
 
         await query('INSERT INTO users (username, email, password, admin, elo) VALUES (?, ?, ?, 0, 0)', [username, email, password]);
-        res.status(200).json({ success: true, redirection: '/login' });
+        res.status(200).json({ success: true, redirection: '/authenticate' });
     } catch (err) {
         console.error('Error during signup:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'Server error' });
     }
 });
 
 
 //---------- Login query ---------
 server.post('/api/login', async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, password } = req.body;
 
-    if (!username || !email || !password) {
+    if (!username || !password) {
         return res.status(400).json({ error: 'Username and password are required.' });
     }
     try {
-        const userExists = await findUser(username, email);
-        if (!userExists) {
+        const userFound = await findUser(username);
+        if ((userFound?.password) === undefined) {
             return res.status(401).json({ error: 'Invalid username.' });
         }
-
-        const passwordMatch = await bcrypt.compare(password, user.password);
+        const passwordMatch = await bcrypt.compare(password, userFound.password);
 
         if (!passwordMatch) {
             return res.status(401).json({ error: 'Invalid password.' });
         }
 
         const token = generateToken(username);
-        res.json({ token, redirection: '/error' });
+        res.cookie(username+'_token', token, { httpOnly: true })
+        res.status(200).json({ token: token, redirection: '/profile' });
     } catch (error) {
         console.error('Error during login:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'Server error' });
     }
+});
+
+
+/* =========================== ROUTES setup =========================== */
+
+
+server.get('/', (req, res) => {
+    res.render("App");
+});
+server.get('/register', (req, res) => {
+    res.render("register");
+});
+server.get('/authenticate', (req, res) => {
+    res.render('authenticate');
+});
+server.get('/profile',(req,res)=>{
+    res.render('profile');
 });
 
 
@@ -156,20 +182,5 @@ server.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-
-
-/* =========================== ROUTES setup =========================== */
-
-
-server.get('/', (req, res) => {
-    res.render("App");
-});
-server.get('/register', (req, res) => {
-    res.render("register");
-});
-server.get('/login', (req, res) => {
-    res.render('login');
-});
-
 
 module.exports = server;
