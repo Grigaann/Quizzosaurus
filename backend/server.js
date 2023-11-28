@@ -17,16 +17,13 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 server.use(cookieParser());
 server.use(express.static(path.join(__dirname, 'public')));
-server.use(cors());
+server.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 server.use(bodyParser.json());
 
 server.set('views', __dirname, '/Components')
 server.set('view engine', 'jsx');
 server.engine('jsx', require('express-react-views').createEngine());
 
-server.get('/', (req, res) => {
-    res.send('Hello World!');
-});
 server.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
@@ -50,10 +47,9 @@ function verifyToken(token) {
     }
 }
 
-server.get('/api/validate/:token'), (req, res) => {
-    const token = req.cookies.token;
-    res.json({ isValidated: verifyToken(token) });
-}
+server.get('/api/validateToken', (req, res) => {
+    res.json({ isValidated: verifyToken(req.cookies.token) ? true : false });
+});
 
 /* =========================== SQL setup =========================== */
 
@@ -105,7 +101,7 @@ server.post('/api/signup', async (req, res) => {
     }
 
     try {
-        const userFound = await findUser(username,email);
+        const userFound = await findUser(username, email);
         if (userFound) {
             return res.status(401).json({ error: 'Username or email already taken.' });
         }
@@ -137,13 +133,36 @@ server.post('/api/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid password.' });
         }
 
-        const token = generateToken(username);
-        res.cookie(username+'_token', token, { httpOnly: true })
-        res.status(200).json({ token: token, redirection: '/profile' });
+        res.cookie('token', generateToken(username), { httpOnly: true, secure: true });
+        res.status(200).json({ redirection: '/profile' });
     } catch (error) {
         console.error('Error during login:', error);
         res.status(500).json({ error: 'Server error' });
     }
+});
+
+
+//---------- Logout query ---------
+server.post('/api/logout', async (req, res) => {
+
+    const token = verifyToken(req.cookies.token);
+
+    if (!token) {
+        return res.status(401);
+    }
+
+    const serialized = serialize('token', null, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: -1,
+    });
+    res.setHeader('Set-Cookie', serialized);
+    res.status(200).json({
+        status: 'success',
+        message: 'Logged out',
+        redirection: '/authenticate',
+    });
 });
 
 
@@ -159,7 +178,7 @@ server.get('/register', (req, res) => {
 server.get('/authenticate', (req, res) => {
     res.render('authenticate');
 });
-server.get('/profile',(req,res)=>{
+server.get('/profile', (req, res) => {
     res.render('profile');
 });
 

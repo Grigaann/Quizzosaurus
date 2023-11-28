@@ -5,7 +5,7 @@ import axios from 'axios';
 import bcrypt from 'bcryptjs';
 
 export default function Register() {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -16,6 +16,7 @@ export default function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         if (password !== confirmPassword) {
             alert('Passwords do not match!');
@@ -54,6 +55,7 @@ export default function Register() {
             console.error('Registration failed:', error.message);
             setError('Registration failed. Please try again.');
         }
+        setLoading(false);
     };
 
     return (
@@ -77,7 +79,7 @@ export default function Register() {
                     <input type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete='off' required />
                 </label>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                {loading ? <button type="submit">Sign up</button> : <button disabled>Loading...</button>}
+                <button type="submit" disabled={loading}>Sign in</button>
             </form>
             <section>
                 <p>Already have an account? <Link to='/authenticate'>Login instead</Link></p>
