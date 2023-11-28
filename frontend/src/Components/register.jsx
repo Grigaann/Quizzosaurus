@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 
-import axios from 'axios';
-import bcrypt from 'bcryptjs';
+import {register} from '../Controllers/Auth';
 
 export default function Register() {
     const [loading, setLoading] = useState(false);
@@ -17,44 +16,7 @@ export default function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-
-        if (password !== confirmPassword) {
-            alert('Passwords do not match!');
-            return;
-        }
-
-        try {
-            const avlbl = await axios.post('http://localhost:8080/api/checkUser', { username, email });
-            if (!avlbl.data.available) {
-                setError('Username or email is already taken!');
-                return;
-            } else {
-                bcrypt.genSalt(10).then(salt => {
-                    bcrypt.hash(password, salt)
-                        .then(async (hashed) => {
-                            await axios.post('http://localhost:8080/api/signup', {
-                                username: username,
-                                email: email,
-                                password: hashed
-                            })
-                                .then((response) => {
-                                    if (response.data.success) {
-                                        console.log('Registration successful!');
-                                        navigate(response.data.redirection);
-                                    } else {
-                                        console.log('Registration failed.');
-                                    }
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                });
-                        });
-                });
-            }
-        } catch (error) {
-            console.error('Registration failed:', error.message);
-            setError('Registration failed. Please try again.');
-        }
+        navigate(register({usrnm: username, eml: email, pwd: password}, confirmPassword, setError));
         setLoading(false);
     };
 

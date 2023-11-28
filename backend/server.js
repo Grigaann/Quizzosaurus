@@ -15,10 +15,10 @@ var server = express();
 server.use(logger('dev'));
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
-server.use(cookieParser());
 server.use(express.static(path.join(__dirname, 'public')));
-server.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+server.use(cookieParser());
 server.use(bodyParser.json());
+server.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 server.set('views', __dirname, '/Components')
 server.set('view engine', 'jsx');
@@ -133,36 +133,26 @@ server.post('/api/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid password.' });
         }
 
-        res.cookie('token', generateToken(username), { httpOnly: true, secure: true });
+        res.cookie('token', generateToken(username), { httpOnly: true });
         res.status(200).json({ redirection: '/profile' });
     } catch (error) {
         console.error('Error during login:', error);
-        res.status(500).json({ error: 'Server error' });
+        res.status(500).json({ error: 'Server error.' });
     }
 });
 
 
 //---------- Logout query ---------
 server.post('/api/logout', async (req, res) => {
+    console.log(req.cookies);
 
     const token = verifyToken(req.cookies.token);
 
     if (!token) {
-        return res.status(401);
+        return res.status(401).json({ error: "Token doesn't exist." });
     }
 
-    const serialized = serialize('token', null, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: -1,
-    });
-    res.setHeader('Set-Cookie', serialized);
-    res.status(200).json({
-        status: 'success',
-        message: 'Logged out',
-        redirection: '/authenticate',
-    });
+    res.status(202).clearCookie('token').json({ redirection: '/register' });
 });
 
 
