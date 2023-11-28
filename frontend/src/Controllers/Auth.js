@@ -81,3 +81,19 @@ export const logout = async () => {
         console.error('Error during log out:', error);
     }
 }
+
+/* ========== DELETE USER function ========= */
+
+export const deleteUser = async () => {
+    try {
+        const response = await axios.delete('http://localhost:8080/api/delete_user',{ withCredentials: true });
+        if (response.data.redirection) {
+            console.log('User "'+response.data.name+'" successfully deleted!');
+            return response.data.redirection;
+        } else {
+            console.log('Delete user failed.');
+        }
+    } catch (error) {
+        console.error('Error during suppression:', error);
+    }
+}

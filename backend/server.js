@@ -48,7 +48,7 @@ function verifyToken(token) {
 }
 
 server.get('/api/validateToken', (req, res) => {
-    res.json({ isValidated: verifyToken(req.cookies.token) ? true : false });
+    res.json({ isValidated: verifyToken(req.cookies.token)});
 });
 
 /* =========================== SQL setup =========================== */
@@ -89,7 +89,7 @@ server.post('/api/checkUser', async (req, res) => {
     }
     const userFound = await findUser(username, email);
     const availbl = (!userFound || userFound.length === 0);
-    res.json({ available: availbl });
+    res.json({ available: availbl, user: userFound });
 });
 
 //---------- Register query ----------
@@ -143,18 +143,28 @@ server.post('/api/login', async (req, res) => {
 
 
 //---------- Logout query ---------
-server.post('/api/logout', async (req, res) => {
-    console.log(req.cookies);
-
-    const token = verifyToken(req.cookies.token);
-
-    if (!token) {
+server.post('/api/logout', (req, res) => {
+    if (!verifyToken(req.cookies.token)) {
         return res.status(401).json({ error: "Token doesn't exist." });
     }
 
-    res.status(202).clearCookie('token').json({ redirection: '/register' });
+    res.status(202).clearCookie('token').json({ redirection: '/authenticate' });
 });
 
+
+//------- DeleteUser query -------
+server.delete('/api/delete_user', (req, res) => {
+    const token = verifyToken(req.cookies.token);
+    if (token) {
+        db.query('DELETE FROM users WHERE username=?', [token], (err) => {
+            if (err) throw err;
+            res.status(202).clearCookie('token').json({ name:token, redirection: '/profile' });
+        });
+    }
+    else{
+        return res.status(401).json({ error: "Token doesn't exist." });
+    }
+});
 
 /* =========================== ROUTES setup =========================== */
 
