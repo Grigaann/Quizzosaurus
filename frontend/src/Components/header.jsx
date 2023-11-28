@@ -23,7 +23,7 @@ export default function Header() {
                 <div className='dropdown-content'>
                   <a href='/'><strong>Home</strong></a>
                   <Link to='/profile'><strong>Profile</strong></Link>
-                  <a href='/'><strong>About us</strong></a>
+                  <Link to='/about'><strong>About us</strong></Link>
                 </div>
 
               </div>
