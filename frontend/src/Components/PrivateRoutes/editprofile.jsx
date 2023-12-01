@@ -22,11 +22,10 @@ export default function EditProfile() {
 
         const fetchData = async () => {
             try {
-                axios.get('http://localhost:8080/api/validateToken', { withCredentials: true }).then(usrnm => {
-                    axios.post('http://localhost:8080/api/checkUser', { username: usrnm.data.isValidated, email: " " }).then(resp => {
-                        setUsername(resp.data.user.username);
-                        setEmail(resp.data.user.email);
-                    });
+                axios.get('http://localhost:8080/api/validateToken', { withCredentials: true }).then(async response => {
+                    const resp = await axios.post(`http://localhost:8080/api/checkUser/${response.data.tokenID}`);
+                    setUsername(resp.data.user.username);
+                    setEmail(resp.data.user.email);
                 });
             } catch (err) { console.log(err); }
         }

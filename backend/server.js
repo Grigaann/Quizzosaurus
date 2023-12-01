@@ -32,25 +32,25 @@ app.listen(port, () => {
 
 const secretKey = 'oftidyifuom<-z654thtgspùilyuktjdrhsdyjfuki34loitdrehrqqstr,c;v:m-dty2jch,gjvfuktd7yjrshdjyh,g';
 
-function generateToken(username) {
-    const payload = { username };
+function generateToken(id) {
+    const payload = { id };
     const options = { expiresIn: '12h' };
     return jwt.sign(payload, secretKey, options);
 }
 
 function verifyToken(token) {
     try {
-        return jwt.verify(token, secretKey).username;
+        return jwt.verify(token, secretKey).id;
     } catch (err) {
         return null;
     }
 }
 
 app.get('/api/validateToken', (req, res) => {
-    const tokenVerified = verifyToken(req.cookies.token)
-    if (!tokenVerified)
-        res.clearCookie('token').json({ isValidated: tokenVerified });
-    else res.json({ isValidated: tokenVerified });
+    const tokenPayload = verifyToken(req.cookies.token)
+    if (!tokenPayload)
+        res.clearCookie('token').json({ tokenID: tokenPayload });
+    else res.json({ tokenID: tokenPayload });
 });
 
 /* =========================== SQL setup =========================== */
@@ -83,16 +83,39 @@ async function findUser(username, email = undefined) {
     }
 }
 
-app.post('/api/checkUser', async (req, res) => {
-    const { username, email } = req.body;
-
-    if (!username || !email) {
-        return res.status(400).json({ error: 'Username and email are required.' });
+async function getUserByID(id) {
+    try {
+        const user = await query('SELECT * from users WHERE id= ?', [id]);
+        return user[0];
+    } catch (error) {
+        throw error;
     }
-    const userFound = await findUser(username, email);
-    const availbl = (!userFound || userFound.length === 0);
-    res.json({ available: availbl, user: userFound });
+}
+
+app.post('/api/checkUser/:id', async (req, res) => {
+    try {
+        let userFound;
+
+        if (Object.keys(req.body).length !== 0) {
+            const { username, email } = req.body;
+
+            if (!username || !email) {
+                return res.status(400).json({ error: 'Username and email are required.' });
+            }
+
+            userFound = await findUser(username, email);
+        } else {
+            userFound = await getUserByID(req.params.id);
+        }
+
+        const availbl = (!userFound || userFound.length === 0);
+        res.json({ available: availbl, user: userFound });
+    } catch (error) {
+        console.error('Error checking user:', error);
+        res.status(500).json({ error: 'Server Error.' });
+    }
 });
+
 
 //---------- Register query ----------
 app.post('/api/signup', async (req, res) => {
@@ -112,7 +135,7 @@ app.post('/api/signup', async (req, res) => {
         res.status(200).json({ redirection: '/authenticate' });
     } catch (err) {
         console.error('Error during signup:', err);
-        res.status(500).json({ error: 'app error' });
+        res.status(500).json({ error: 'Server error' });
     }
 });
 
@@ -135,18 +158,18 @@ app.post('/api/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid password.' });
         }
 
-        res.cookie('token', generateToken(userFound.username), { httpOnly: true, secure: false });
+        res.cookie('token', generateToken(userFound.id), { httpOnly: true });
         res.status(200).json({ redirection: '/profile' });
     } catch (error) {
         console.error('Error during login:', error);
-        res.status(500).json({ error: 'app error.' });
+        res.status(500).json({ error: 'Server error.' });
     }
 });
 
 //---------- Edit Profile query ---------
 app.post('/api/edit_profile', async (req, res) => {
-    const loggedUser = verifyToken(req.cookies.token);
-    if (!loggedUser) {
+    const loggedUserID = verifyToken(req.cookies.token);
+    if (!loggedUserID) {
         return res.status(401).json({ error: "No user is currently logged in." });
     }
 
@@ -155,14 +178,11 @@ app.post('/api/edit_profile', async (req, res) => {
     if (!user.username && !user.email) {
         return res.status(400).json({ error: "Enter data." });
     }
-    console.log("user : ", user)
 
     try {
-        findUser(loggedUser).then(async userFound => {
-            console.log('userFound : ', userFound);
+        findUser(getUserByID(loggedUserID).username).then(async userFound => {
             if (user.oldPWD !== undefined && user.newPWD !== undefined) {
                 const passwordMatch = await bcrypt.compare(user.oldPWD, userFound.password)
-                console.log(passwordMatch);
                 if (!passwordMatch) {
                     return res.status(401).json({ error: 'Invalid password.' });
                 }
@@ -170,13 +190,13 @@ app.post('/api/edit_profile', async (req, res) => {
 
             db.query("UPDATE users SET username = ?, email = ?"
                 + (user.newPWD === undefined ? "" : ", password = '" + user.newPWD + "'")
-                + " WHERE id= ?", [user.username, user.email, userFound.id], () => {
+                + " WHERE id= ?", [user.username, user.email, loggedUserID], () => {
                     res.status(200).json({ redirection: '/profile' });
                 });
         });
     } catch (error) {
         console.log('Error during applying changes: ', error);
-        res.status(500).json({ error: 'app error.' });
+        res.status(500).json({ error: 'Server error.' });
     }
 });
 
@@ -195,9 +215,9 @@ app.post('/api/logout', (req, res) => {
 app.delete('/api/delete_user', (req, res) => {
     const token = verifyToken(req.cookies.token);
     if (token) {
-        db.query('DELETE FROM users WHERE username=?', [token], (err) => {
+        db.query('DELETE FROM users WHERE id=?', [token], (err) => {
             if (err) throw err;
-            res.status(202).clearCookie('token').json({ name: token, redirection: '/profile' });
+            res.status(202).clearCookie('token').json({ redirection: '/profile' });
         });
     }
     else {

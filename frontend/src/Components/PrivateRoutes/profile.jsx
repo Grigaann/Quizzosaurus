@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+
+import axios from "axios";
 
 import { logout,deleteUser } from '../../Controllers/Auth';
-
-import EditProfile from './editprofile';
 
 export default function Profile() {
     const [username, setUsername] = useState('');
@@ -13,7 +12,26 @@ export default function Profile() {
 
     const logOut = async () => await logout();
 
-    const DeleteAccount = async () => await deleteUser();
+    const DeleteAccount = async () => {
+        if (window.confirm("You are about to delete your account permanently.\nDo you want to continue?"))
+            await deleteUser();
+    }
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+            try {
+                axios.get('http://localhost:8080/api/validateToken', { withCredentials: true }).then(async response => {
+                    const resp = await axios.post(`http://localhost:8080/api/checkUser/${response.data.tokenID}`);
+                    setUsername(resp.data.user.username);
+                    setEmail(resp.data.user.email);
+                });
+            } catch (err) { console.log(err); }
+        }
+        fetchData()
+
+
+    }, []);
 
     return (
         <>

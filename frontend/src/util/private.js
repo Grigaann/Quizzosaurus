@@ -8,10 +8,10 @@ export default function PrivateRoute({ children }) {
     const [valid, setValid] = useState(null);
     
     axios.get('http://localhost:8080/api/validateToken', { withCredentials: true }).then((response) => {
-        setValid(response.data.isValidated ? true : false );
+        setValid(response.data.tokenID ? true : false );
         setLoading(false);
     }).catch((error) => {
         console.log(error);
     });
-    return children//loading ? <div>Loading...</div> : valid === true ? children : <Navigate to='/authenticate' />;
+    return  loading ? <div>Loading...</div> : valid === true ? children : <Navigate to='/authenticate' />;
 }

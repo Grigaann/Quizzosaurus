@@ -19,7 +19,6 @@ export const register = async (user, setError) => {
                 email: user.eml,
                 password: await hashing(user.pwd)
             });
-            console.log('Path:', response.data.redirection);
             if (response.data.redirection) {
                 console.log('Registration successful!');
                 window.location.assign(response.data.redirection);
@@ -73,7 +72,7 @@ export const editprofile = async ({ user }, chgpwd, setError) => {
             window.location.assign(response.data.redirection);
         } else {
             console.log('Changes did not apply.');
-            setError('Changes did not apply : ', response.data.error);
+            setError('Changes did not apply.');
         }
     } catch (error) {
         console.error('Update failed. Please try again.')
@@ -103,7 +102,6 @@ export const deleteUser = async () => {
     try {
         const response = await axios.delete('http://localhost:8080/api/delete_user', { withCredentials: true });
         if (response.data.redirection) {
-            console.log('User "' + response.data.name + '" successfully deleted!');
             window.location.assign(response.data.redirection);
         } else {
             console.log('Delete user failed.');

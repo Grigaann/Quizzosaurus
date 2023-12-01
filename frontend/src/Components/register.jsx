@@ -19,7 +19,7 @@ export default function Register() {
             return;
         }
         setLoading(true);
-        await register({ usrnm: username, eml: email, pwd: password }, setError);
+        console.log(await register({ usrnm: username, eml: email, pwd: password }, setError));
         setLoading(false);
     };
 
