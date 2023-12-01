@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import {login} from '../Controllers/Auth';
 
@@ -9,12 +9,11 @@ export default function Authenticate() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        navigate(await login({usrnm: username, pwd: password}, setError));
+        await login({usrnm: username, pwd: password}, setError);
         setLoading(false);
     };
     return (

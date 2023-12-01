@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import {register} from '../Controllers/Auth';
+import { register } from '../Controllers/Auth';
 
 export default function Register() {
     const [loading, setLoading] = useState(false);
@@ -11,12 +11,15 @@ export default function Register() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (password !== confirmPassword) {
+            alert('Passwords do not match!');
+            return;
+        }
         setLoading(true);
-        navigate(register({usrnm: username, eml: email, pwd: password}, confirmPassword, setError));
+        await register({ usrnm: username, eml: email, pwd: password }, setError);
         setLoading(false);
     };
 

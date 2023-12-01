@@ -13,5 +13,5 @@ export default function PrivateRoute({ children }) {
     }).catch((error) => {
         console.log(error);
     });
-    return loading ? <div>Loading...</div> : valid === true ? children : <Navigate to='/authenticate' />;
+    return children//loading ? <div>Loading...</div> : valid === true ? children : <Navigate to='/authenticate' />;
 }

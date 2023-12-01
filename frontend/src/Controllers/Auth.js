@@ -1,42 +1,31 @@
 import axios from 'axios';
 import bcrypt from 'bcryptjs';
 
+async function hashing(pwd) {
+    return await bcrypt.hash(pwd, await bcrypt.genSalt(10));
+}
 
-/* ============ REGISTER function ============ */
+/* ============ SIGN IN function ============ */
 
-export const register = async (user, confirmPassword, setError) => {
-    if (user.pwd !== confirmPassword) {
-        alert('Passwords do not match!');
-        return;
-    }
-
+export const register = async (user, setError) => {
     try {
-        const avlbl = await axios.post('http://localhost:8080/api/checkUser', { username: user.usrnm, email: user.email });
+        const avlbl = await axios.post('http://localhost:8080/api/checkUser', { username: user.usrnm, email: user.eml });
         if (!avlbl.data.available) {
             setError('Username or email is already taken!');
             return;
         } else {
-            bcrypt.genSalt(10).then(salt => {
-                bcrypt.hash(user.pwd, salt)
-                    .then(async (hashed) => {
-                        await axios.post('http://localhost:8080/api/signup', {
-                            username: user.usrnm,
-                            email: user.eml,
-                            password: hashed
-                        })
-                            .then((response) => {
-                                if (response.data.success) {
-                                    console.log('Registration successful!');
-                                    return response.data.redirection;
-                                } else {
-                                    console.log('Registration failed.');
-                                }
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                            });
-                    });
+            const response = await axios.post('http://localhost:8080/api/signup', {
+                username: user.usrnm,
+                email: user.eml,
+                password: await hashing(user.pwd)
             });
+            console.log('Path:', response.data.redirection);
+            if (response.data.redirection) {
+                console.log('Registration successful!');
+                window.location.assign(response.data.redirection);
+            } else {
+                console.log('Registration failed.');
+            }
         }
     } catch (error) {
         console.error('Registration failed:', error.message);
@@ -44,7 +33,7 @@ export const register = async (user, confirmPassword, setError) => {
     }
 }
 
-/* ============ LOGIN function ============ */
+/* ============ LOG IN function ============ */
 
 export const login = async (user, setError) => {
     try {
@@ -55,10 +44,10 @@ export const login = async (user, setError) => {
 
         if (response.data.redirection) {
             console.log('Login successful!');
-            return response.data.redirection;
+            window.location.assign(response.data.redirection);
         } else {
-            console.log('Login failed.');
-            setError(response.data.error || 'Login failed. Please try again');
+            console.log('Login aborted.');
+            setError('Login aborted.');
         }
     } catch (error) {
         console.error('Error during login:', error);
@@ -66,14 +55,40 @@ export const login = async (user, setError) => {
     }
 }
 
-/* ============ LOGOUT function ============ */
+/* ============ Edit Profile function ============ */
+
+export const editprofile = async ({user}, chgpwd, setError) => {
+    try {
+        const response = await axios.post('http://localhost:8080/api/edit_profile', {user:{
+            username: user.username,
+            email: user.email,
+            password: chgpwd ? await hashing(user.password) : undefined
+        }}, { withCredentials: true });
+
+        console.log('dasUser = ', user);
+
+        if (response.data.redirection) {
+            console.log("Path : ", response.data.redirection)
+            console.log("Edit successful!");
+            //window.location.assign(response.data.redirection);
+        } else {
+            console.log('Changes did not apply.');
+            setError('Changes did not apply.');
+        }
+    } catch (error) {
+        console.error('Update failed. Please try again.')
+        setError('Update failed. Please try again.')
+    }
+}
+
+/* ============ LOG OUT function ============ */
 
 export const logout = async () => {
     try {
-        const response = await axios.post('http://localhost:8080/api/logout', {},{ withCredentials: true });
+        const response = await axios.post('http://localhost:8080/api/logout', {}, { withCredentials: true });
         if (response.data.redirection) {
             console.log('Log out successful!');
-            return response.data.redirection;
+            window.location.assign(response.data.redirection);
         } else {
             console.log('Log out failed.');
         }
@@ -86,10 +101,10 @@ export const logout = async () => {
 
 export const deleteUser = async () => {
     try {
-        const response = await axios.delete('http://localhost:8080/api/delete_user',{ withCredentials: true });
+        const response = await axios.delete('http://localhost:8080/api/delete_user', { withCredentials: true });
         if (response.data.redirection) {
-            console.log('User "'+response.data.name+'" successfully deleted!');
-            return response.data.redirection;
+            console.log('User "' + response.data.name + '" successfully deleted!');
+            window.location.assign(response.data.redirection);
         } else {
             console.log('Delete user failed.');
         }

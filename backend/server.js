@@ -11,21 +11,21 @@ var bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
 
-var server = express();
-server.use(logger('dev'));
-server.use(express.json());
-server.use(express.urlencoded({ extended: false }));
-server.use(express.static(path.join(__dirname, 'public')));
-server.use(cookieParser());
-server.use(bodyParser.json());
-server.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+var app = express();
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
-server.set('views', __dirname, '/Components')
-server.set('view engine', 'jsx');
-server.engine('jsx', require('express-react-views').createEngine());
+app.set('views', __dirname, '/Components')
+app.set('view engine', 'jsx');
+app.engine('jsx', require('express-react-views').createEngine());
 
-server.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+app.listen(port, () => {
+    console.log(`app is running at http://localhost:${port}`);
 });
 
 /* =========================== TOKEN setup =========================== */
@@ -34,21 +34,23 @@ const secretKey = 'oftidyifuom<-z654thtgspùilyuktjdrhsdyjfuki34loitdrehrqqstr,c
 
 function generateToken(username) {
     const payload = { username };
-    const options = { expiresIn: '1h' };
+    const options = { expiresIn: '12h' };
     return jwt.sign(payload, secretKey, options);
 }
 
 function verifyToken(token) {
     try {
-        const decoded = jwt.verify(token, secretKey);
-        return decoded.username;
+        return jwt.verify(token, secretKey).username;
     } catch (err) {
         return null;
     }
 }
 
-server.get('/api/validateToken', (req, res) => {
-    res.json({ isValidated: verifyToken(req.cookies.token)});
+app.get('/api/validateToken', (req, res) => {
+    const tokenVerified = verifyToken(req.cookies.token)
+    if (!tokenVerified)
+        res.clearCookie('token').json({ isValidated: tokenVerified });
+    else res.json({ isValidated: tokenVerified });
 });
 
 /* =========================== SQL setup =========================== */
@@ -64,8 +66,8 @@ db.connect((err) => {
     console.log('Connected to database');
 });
 
-const util = require('util');
-const query = util.promisify(db.query).bind(db);
+
+const query = require('util').promisify(db.query).bind(db);
 
 //------- Search User in db ------
 async function findUser(username, email = undefined) {
@@ -81,7 +83,7 @@ async function findUser(username, email = undefined) {
     }
 }
 
-server.post('/api/checkUser', async (req, res) => {
+app.post('/api/checkUser', async (req, res) => {
     const { username, email } = req.body;
 
     if (!username || !email) {
@@ -93,7 +95,7 @@ server.post('/api/checkUser', async (req, res) => {
 });
 
 //---------- Register query ----------
-server.post('/api/signup', async (req, res) => {
+app.post('/api/signup', async (req, res) => {
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
@@ -107,16 +109,16 @@ server.post('/api/signup', async (req, res) => {
         }
 
         await query('INSERT INTO users (username, email, password, admin, elo) VALUES (?, ?, ?, 0, 0)', [username, email, password]);
-        res.status(200).json({ success: true, redirection: '/authenticate' });
+        res.status(200).json({ redirection: '/authenticate' });
     } catch (err) {
         console.error('Error during signup:', err);
-        res.status(500).json({ error: 'Server error' });
+        res.status(500).json({ error: 'app error' });
     }
 });
 
 
 //---------- Login query ---------
-server.post('/api/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
@@ -133,17 +135,43 @@ server.post('/api/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid password.' });
         }
 
-        res.cookie('token', generateToken(username), { httpOnly: true });
+        res.cookie('token', generateToken(userFound.username), { httpOnly: true, secure: false });
         res.status(200).json({ redirection: '/profile' });
     } catch (error) {
         console.error('Error during login:', error);
-        res.status(500).json({ error: 'Server error.' });
+        res.status(500).json({ error: 'app error.' });
+    }
+});
+
+//---------- Edit Profile query ---------
+app.post('/api/edit_profile', async (req, res) => {
+    const loggedUser = verifyToken(req.cookies.token);
+    if (!loggedUser) {
+        return res.status(401).json({ error: "No user is currently logged in." });
+    }
+
+    const user = req.body.user;
+
+    if (!user.username && !user.email)
+        return res.status(400).json({ error: "Enter any data." });
+
+    try {
+        findUser(loggedUser).then(loggedUser => {
+            db.query("UPDATE users SET username = ?, email = ?" + (user.password === undefined ? "" : ", password = '" + user.password + "'")
+                + " WHERE id= ?", [user.username, user.email, loggedUser.id], (callback) => {
+                    console.log("callback : ",callback);
+                    res.status(200).json({ redirection: '/profile'});
+                });
+        });
+    } catch (error) {
+        console.log('Error during applying changes: ', error);
+        res.status(500).json({ error: 'app error.' });
     }
 });
 
 
 //---------- Logout query ---------
-server.post('/api/logout', (req, res) => {
+app.post('/api/logout', (req, res) => {
     if (!verifyToken(req.cookies.token)) {
         return res.status(401).json({ error: "Token doesn't exist." });
     }
@@ -152,16 +180,16 @@ server.post('/api/logout', (req, res) => {
 });
 
 
-//------- DeleteUser query -------
-server.delete('/api/delete_user', (req, res) => {
+//------- Delete User query -------
+app.delete('/api/delete_user', (req, res) => {
     const token = verifyToken(req.cookies.token);
     if (token) {
         db.query('DELETE FROM users WHERE username=?', [token], (err) => {
             if (err) throw err;
-            res.status(202).clearCookie('token').json({ name:token, redirection: '/profile' });
+            res.status(202).clearCookie('token').json({ name: token, redirection: '/profile' });
         });
     }
-    else{
+    else {
         return res.status(401).json({ error: "Token doesn't exist." });
     }
 });
@@ -169,17 +197,20 @@ server.delete('/api/delete_user', (req, res) => {
 /* =========================== ROUTES setup =========================== */
 
 
-server.get('/', (req, res) => {
+app.get('/', (req, res) => {
     res.render("App");
 });
-server.get('/register', (req, res) => {
+app.get('/register', (req, res) => {
     res.render("register");
 });
-server.get('/authenticate', (req, res) => {
+app.get('/authenticate', (req, res) => {
     res.render('authenticate');
 });
-server.get('/profile', (req, res) => {
+app.get('/profile', (req, res) => {
     res.render('profile');
+});
+app.get('/editprofile', (req, res) => {
+    res.render('editprofile');
 });
 
 
@@ -187,12 +218,12 @@ server.get('/profile', (req, res) => {
 
 
 // catch 404 and forward to error handler
-server.use(function (req, res, next) {
+app.use(function (req, res, next) {
     next(createError(404));
 });
 
 // error handler
-server.use(function (err, req, res, next) {
+app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -202,4 +233,4 @@ server.use(function (err, req, res, next) {
     res.render('error');
 });
 
-module.exports = server;
+module.exports = app;

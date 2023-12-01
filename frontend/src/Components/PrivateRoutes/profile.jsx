@@ -1,34 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { logout,deleteUser } from '../../Controllers/Auth';
+
+import EditProfile from './editprofile';
 
 export default function Profile() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
-    const navigate = useNavigate();
 
-    const ChgPwd = () => navigate('/editprofile');
+    const ChgPwd = () => window.location.assign('/editprofile');
 
-    const logOut = async () => navigate(await logout());
+    const logOut = async () => await logout();
 
-    const DeleteAccount = async () => navigate(await deleteUser());
-
-    // useEffect(() => {
-    //     axios.post('http://localhost:8080/api/checkUser', (err, response) => {
-    //         if (err) throw err;
-    //         if (response) {
-    //             setUsername(response.data.user.username);
-    //             setEmail(response.data.user.email);
-    //         }
-    //     });
-    // });
+    const DeleteAccount = async () => await deleteUser();
 
     return (
         <>
             <section>
                 <h1>Profile</h1>
-                {/* <Link to={ <EditProfile />}>Edit profile</Link> */}
                 <h3>Username</h3>
                 <p>{username}</p>
                 <h3>E-mail</h3>
