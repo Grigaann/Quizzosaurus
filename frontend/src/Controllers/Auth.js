@@ -57,23 +57,23 @@ export const login = async (user, setError) => {
 
 /* ============ Edit Profile function ============ */
 
-export const editprofile = async ({user}, chgpwd, setError) => {
+export const editprofile = async ({ user }, chgpwd, setError) => {
     try {
-        const response = await axios.post('http://localhost:8080/api/edit_profile', {user:{
-            username: user.username,
-            email: user.email,
-            password: chgpwd ? await hashing(user.password) : undefined
-        }}, { withCredentials: true });
-
-        console.log('dasUser = ', user);
+        const response = await axios.post('http://localhost:8080/api/edit_profile', {
+            user: {
+                username: user.username,
+                email: user.email,
+                oldPWD: chgpwd ? user.currPwd : undefined,
+                newPWD: chgpwd ? await hashing(user.newPwd) : undefined
+            }
+        }, { withCredentials: true });
 
         if (response.data.redirection) {
-            console.log("Path : ", response.data.redirection)
             console.log("Edit successful!");
-            //window.location.assign(response.data.redirection);
+            window.location.assign(response.data.redirection);
         } else {
             console.log('Changes did not apply.');
-            setError('Changes did not apply.');
+            setError('Changes did not apply : ', response.data.error);
         }
     } catch (error) {
         console.error('Update failed. Please try again.')
