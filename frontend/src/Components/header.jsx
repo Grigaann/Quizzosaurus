@@ -28,7 +28,7 @@ export default function Header() {
 
               </div>
               <li><a href='/'><strong>ScoreBoard</strong></a></li>
-              <li><a href='/'><strong>Quiz</strong></a></li>  
+              <li><a href='/quiz'><strong>Quiz</strong></a></li>  
 
             </div>
           </ul>

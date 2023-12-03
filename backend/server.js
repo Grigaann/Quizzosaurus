@@ -40,6 +40,9 @@ server.get('/register', (req, res) => {
 server.get('/login', (req, res) => {
     res.render('login');
 });
+server.get('/quiz', (req, res) => {
+    res.render('quiz');
+});
 
 /* =========================== TOKEN setup =========================== */
 
@@ -94,6 +97,16 @@ server.post('/api/signup', (req, res) => {
         } 
     });
 });
+
+/* =========================== GET QUIZ =========================== */
+function getQuestions(){
+    const array = [];
+    db.query("SELECT * FROM questions", (err, result)=>{
+        if (err) throw err;
+        array = result;
+        console.log(array);
+    });
+};
 
 /* =========================== THE END =========================== */
 
