@@ -5,6 +5,8 @@ import { register } from '../Controllers/Auth';
 import Footer from './footer';
 import Header from './header';
 
+import './register.css'
+
 export default function Register() {
     const [loading, setLoading] = useState(false);
 
@@ -28,8 +30,8 @@ export default function Register() {
     return (
         <>
             <Header />
-            <form onSubmit={handleSubmit}>
-                <h4>Sign up here</h4>
+            <form id="regform" onSubmit={handleSubmit}>
+                <h2 id="titleformreg">Sign Up</h2>
                 <label>
                     Username:
                     <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} autoComplete='off' required />
@@ -47,10 +49,10 @@ export default function Register() {
                     <input type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete='off' required />
                 </label>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button type="submit" disabled={loading}>Sign in</button>
+                <button type="submit" disabled={loading}><strong>Sign in</strong></button>
             </form>
             <section>
-                <p>Already have an account? <Link to='/authenticate'>Login instead</Link></p>
+                <p id="loglink">Already have an account? Login <Link to='/authenticate'><strong>here</strong></Link></p>
             </section>
             <Footer />
         </>

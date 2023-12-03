@@ -39,16 +39,21 @@ export default function Profile() {
     return (
         <>
             <Header />
-            <section>
-                <h1>Profile</h1>
-                <h3>Username</h3>
-                <p>{username}</p>
-                <h3>E-mail</h3>
-                <p>{email}</p>
-                <button onClick={ChgPwd}>Change password</button>
-                <button onClick={logOut}>Log out</button>
-                <button color='red' onClick={DeleteAccount}>Delete account</button>
-            </section>
+            <div class="profile">
+                <h2 id="proftitle">Profile</h2>
+                <div id="usernamediv">
+                    <h3 id="profname">Username</h3>
+                    <p>{username}</p>
+                </div>
+                <div id="maildiv">
+                    <h3 id="profmail">E-mail</h3>
+                    <p>{email}</p>
+                </div>
+                <br/>
+                <button onClick={ChgPwd}><strong>Change password</strong></button>
+                <button onClick={logOut}><strong>Log out</strong></button>
+                <button color='red' onClick={DeleteAccount}><strong>Delete account</strong></button>
+            </div>
             <Footer />
         </>
     )

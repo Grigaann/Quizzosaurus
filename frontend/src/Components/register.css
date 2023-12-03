@@ -1,9 +1,5 @@
-form {
-    margin: auto;
-    margin-top: 10%;
-    width: 15%;
-    border: 3px solid #f1f1f1;
-    background-color: beige;
+  #titleformreg {
+    text-align: center;
   }
   
   input[type=text],
@@ -29,4 +25,9 @@ form {
   
   button:hover {
     opacity: 0.8;
+  }
+
+  #loglink {
+    text-align:center;
+    margin-top:1%;
   }

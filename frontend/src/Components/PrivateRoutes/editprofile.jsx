@@ -50,8 +50,8 @@ export default function EditProfile() {
     return (
         <>
             <Header />
-            <form onSubmit={handleSubmit}>
-                <h1>Edit your profile data</h1>
+            <form id="editform" onSubmit={handleSubmit}>
+                <h2 id="titleform">Edit Profile</h2>
                 <label>
                     Username:
                     <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} autoComplete='off' required />
@@ -77,10 +77,10 @@ export default function EditProfile() {
                     </label>}
                 </>}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button type="submit" disabled={loading}>Save changes</button>
+                <button type="submit" disabled={loading}><strong>Save changes</strong></button>
             </form>
             <section>
-                <Link to='/profile'>Discard changes</Link>
+                <p id="discharge"><Link to='/profile'><strong>Discard Changes</strong></Link></p>
             </section>
             <Footer />
         </>

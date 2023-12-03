@@ -5,6 +5,8 @@ import {login} from '../Controllers/Auth';
 import Footer from './footer';
 import Header from './header';
 
+import './authenticate.css'
+
 export default function Authenticate() {
     const [loading, setLoading] = useState(false);
 
@@ -21,8 +23,8 @@ export default function Authenticate() {
     return (
         <>
             <Header />
-            <form onSubmit={handleSubmit}>
-                <h4>Log in to your account</h4>
+            <form id="logform" onSubmit={handleSubmit}>
+                <h2 id="titleform">Log In</h2>
                 <label>
                     Username:
                     <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} autoComplete='off' required />
@@ -32,10 +34,10 @@ export default function Authenticate() {
                     <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete='off' required />
                 </label>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button type="submit" disabled={loading}>Log in</button>
+                <button type="submit" disabled={loading}><strong>Log in</strong></button>
             </form>
             <section>
-                <p>Not registered yet ? Create your account <Link to='/register'>here</Link></p>
+                <p id="reglink">Not registered yet ? Create your account <Link to='/register'><strong>here</strong></Link></p>
             </section>
             <Footer />
         </>
