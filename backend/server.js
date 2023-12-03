@@ -9,59 +9,49 @@ var logger = require('morgan');
 var cors = require('cors');
 var bodyParser = require('body-parser');
 const mysql = require('mysql2');
+const bcrypt = require('bcrypt');
 
-var server = express();
-server.use(logger('dev'));
-server.use(express.json());
-server.use(express.urlencoded({ extended: false }));
-server.use(cookieParser());
-server.use(express.static(path.join(__dirname, 'public')));
-server.use(cors());
-server.use(bodyParser.json());
+var app = express();
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
-server.set('views', __dirname, '/Components')
-server.set('view engine', 'jsx');
-server.engine('jsx', require('express-react-views').createEngine());
+app.set('views', __dirname, '/Components')
+app.set('view engine', 'jsx');
+app.engine('jsx', require('express-react-views').createEngine());
 
-server.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
-});
-
-
-/* =========================== ROUTES setup =========================== */
-
-
-server.get('/', (req, res) => {
-    res.render("App");
-});
-server.get('/register', (req, res) => {
-    res.render("register");
-});
-server.get('/login', (req, res) => {
-    res.render('login');
-});
-server.get('/quiz', (req, res) => {
-    res.render('quiz');
+app.listen(port, () => {
+    console.log(`app is running at http://localhost:${port}`);
 });
 
 /* =========================== TOKEN setup =========================== */
 
 const secretKey = 'oftidyifuom<-z654thtgspùilyuktjdrhsdyjfuki34loitdrehrqqstr,c;v:m-dty2jch,gjvfuktd7yjrshdjyh,g';
 
-function generateToken(username) {
-    const payload = { username };
-    const options = { expiresIn: '1h' };
+function generateToken(id) {
+    const payload = { id };
+    const options = { expiresIn: '12h' };
     return jwt.sign(payload, secretKey, options);
 }
 
 function verifyToken(token) {
     try {
-        const decoded = jwt.verify(token, secretKey);
-        return decoded.username;
+        return jwt.verify(token, secretKey).id;
     } catch (err) {
-        return null; // Token is invalid or expired 
+        return null;
     }
 }
+
+app.get('/api/validateToken', (req, res) => {
+    const tokenPayload = verifyToken(req.cookies.token)
+    if (!tokenPayload)
+        res.clearCookie('token').json({ tokenID: tokenPayload });
+    else res.json({ tokenID: tokenPayload });
+});
 
 /* =========================== SQL setup =========================== */
 
@@ -77,26 +67,164 @@ db.connect((err) => {
 });
 
 
-//------- Add query -------
-server.post('/api/signup', (req, res) => {
+const query = require('util').promisify(db.query).bind(db);
+
+//------- Search User in db ------
+async function findUser(username, email = undefined) {
+    try {
+        const users = await query("SELECT * FROM users WHERE LOWER(username) = LOWER(?) OR LOWER(email) = LOWER(?)", [username, email]);
+        for (var user of users) {
+            if (user.username === username || user.email === email)
+                return user;
+        }
+    } catch (error) {
+        console.error('Error finding user:', error);
+        throw error;
+    }
+}
+
+async function getUserByID(id) {
+    try {
+        const user = await query('SELECT * from users WHERE id= ?', [id]);
+        return user[0];
+    } catch (error) {
+        throw error;
+    }
+}
+
+app.post('/api/checkUser/:id', async (req, res) => {
+    try {
+        let userFound;
+
+        if (Object.keys(req.body).length !== 0) {
+            const { username, email } = req.body;
+
+            if (!username || !email) {
+                return res.status(400).json({ error: 'Username and email are required.' });
+            }
+
+            userFound = await findUser(username, email);
+        } else {
+            userFound = await getUserByID(req.params.id);
+        }
+
+        const availbl = (!userFound || userFound.length === 0);
+        res.json({ available: availbl, user: userFound });
+    } catch (error) {
+        console.error('Error checking user:', error);
+        res.status(500).json({ error: 'Server Error.' });
+    }
+});
+
+
+//---------- Register query ----------
+app.post('/api/signup', async (req, res) => {
     const { username, email, password } = req.body;
 
-    // TODO: verify email address taken already
+    if (!username || !email || !password) {
+        return res.status(400).json({ error: 'Username, email, and password are required.' });
+    }
 
-    db.query("SELECT * FROM users WHERE username LIKE ?", [username], (err, result) => {
-        if (err) throw err;
-        if (result.length == 0) {
-            db.query('INSERT INTO users (username, email, password, admin, elo) VALUES (?, ?, ?, 0, 0)', [username, email, password], (err) => {
-                if (err) throw err;
-                console.log('User added successfully');
-                // res.redirect('/login');
-            });
-        } else {
-            console.log('This username is already taken');
-            // TODO: send alert
-        } 
-    });
+    try {
+        const userFound = await findUser(username, email);
+        if (userFound) {
+            return res.status(401).json({ error: 'Username or email already taken.' });
+        }
+
+        await query('INSERT INTO users (username, email, password, admin, elo) VALUES (?, ?, ?, 0, 0)', [username, email, password]);
+        res.status(200).json({ redirection: '/authenticate' });
+    } catch (err) {
+        console.error('Error during signup:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
 });
+
+
+//---------- Login query ---------
+app.post('/api/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ error: 'Username and password are required.' });
+    }
+    try {
+        const userFound = await findUser(username);
+        if ((userFound?.password) === undefined) {
+            return res.status(401).json({ error: 'Invalid username.' });
+        }
+        const passwordMatch = await bcrypt.compare(password, userFound.password);
+
+        if (!passwordMatch) {
+            return res.status(401).json({ error: 'Invalid password.' });
+        }
+
+        res.cookie('token', generateToken(userFound.id), { httpOnly: true });
+        res.status(200).json({ redirection: '/profile' });
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({ error: 'Server error.' });
+    }
+});
+
+//---------- Edit Profile query ---------
+app.post('/api/edit_profile', async (req, res) => {
+    const loggedUserID = verifyToken(req.cookies.token);
+    if (!loggedUserID) {
+        return res.status(401).json({ error: "No user is currently logged in." });
+    }
+
+    const user = req.body.user;
+
+    if (!user.username && !user.email) {
+        return res.status(400).json({ error: "Enter data." });
+    }
+
+    try {
+        findUser(getUserByID(loggedUserID).username).then(async userFound => {
+            if (user.oldPWD !== undefined && user.newPWD !== undefined) {
+                const passwordMatch = await bcrypt.compare(user.oldPWD, userFound.password)
+                if (!passwordMatch) {
+                    return res.status(401).json({ error: 'Invalid password.' });
+                }
+            }
+
+            db.query("UPDATE users SET username = ?, email = ?"
+                + (user.newPWD === undefined ? "" : ", password = '" + user.newPWD + "'")
+                + " WHERE id= ?", [user.username, user.email, loggedUserID], () => {
+                    res.status(200).json({ redirection: '/profile' });
+                });
+        });
+    } catch (error) {
+        console.log('Error during applying changes: ', error);
+        res.status(500).json({ error: 'Server error.' });
+    }
+});
+
+
+//---------- Logout query ---------
+app.post('/api/logout', (req, res) => {
+    if (!verifyToken(req.cookies.token)) {
+        return res.status(401).json({ error: "Token doesn't exist." });
+    }
+
+    res.status(202).clearCookie('token').json({ redirection: '/authenticate' });
+});
+
+
+//------- Delete User query -------
+app.delete('/api/delete_user', (req, res) => {
+    const token = verifyToken(req.cookies.token);
+    if (token) {
+        db.query('DELETE FROM users WHERE id=?', [token], (err) => {
+            if (err) throw err;
+            res.status(202).clearCookie('token').json({ redirection: '/profile' });
+        });
+    }
+    else {
+        return res.status(401).json({ error: "Token doesn't exist." });
+    }
+});
+
 
 /* =========================== GET QUIZ =========================== */
 function getQuestions(){
@@ -108,17 +236,37 @@ function getQuestions(){
     });
 };
 
+
+/* =========================== ROUTES setup =========================== */
+
+
+app.get('/', (req, res) => {
+    res.render("App");
+});
+app.get('/register', (req, res) => {
+    res.render("register");
+});
+app.get('/authenticate', (req, res) => {
+    res.render('authenticate');
+});
+app.get('/profile', (req, res) => {
+    res.render('profile');
+});
+app.get('/editprofile', (req, res) => {
+    res.render('editprofile');
+});
+
+
 /* =========================== THE END =========================== */
 
 
-
 // catch 404 and forward to error handler
-server.use(function (req, res, next) {
+app.use(function (req, res, next) {
     next(createError(404));
 });
 
 // error handler
-server.use(function (err, req, res, next) {
+app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -128,4 +276,4 @@ server.use(function (err, req, res, next) {
     res.render('error');
 });
 
-module.exports = server;
+module.exports = app;
