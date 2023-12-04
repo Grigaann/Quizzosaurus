@@ -18,11 +18,11 @@ export default function LandingPage() {
             To be able to play, you must have an account.</p>
             
             <div className="btns">
-                <button><Link to="/authenticate">LOGIN</Link></button>
+                <button id="btnlog"><Link to="/authenticate">LOGIN</Link></button>
                 <p><strong>|</strong></p> 
-                <button><Link to="/register">REGISTER</Link></button>
+                <button id="btnreg"><Link to="/register">REGISTER</Link></button>
             </div>
-
+            
             <Footer />
         </div>
     );

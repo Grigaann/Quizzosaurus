@@ -1,0 +1,42 @@
+.profile {
+    margin: auto;
+    margin-top:5%;
+    width:250px;
+    padding: 10px;
+    background-color: beige;
+    border-radius: 5px 5px 5px 5px;
+    border:3px solid  rgb(206, 206, 173);
+  }
+  
+  #proftitle{
+    text-align:center;
+  }
+  
+  #maildiv{
+    margin-top:10px;
+    border-radius: 5px 5px 5px 5px;
+    border:3px solid  rgb(206, 206, 173);
+    background-color:rgb(236, 236, 201);
+    padding:5px;
+  }
+  
+  #usernamediv{
+    border-radius: 5px 5px 5px 5px;
+    border:3px solid  rgb(206, 206, 173);
+    background-color:rgb(236, 236, 201);
+    padding:5px;
+  }
+  
+  
+  
+  #profmail, #profname, #profelo{
+    margin-top:0;
+  }
+
+  #elodiv{
+    margin-top:10px;
+    border-radius: 5px 5px 5px 5px;
+    border:3px solid  rgb(206, 206, 173);
+    background-color:rgb(236, 236, 201);
+    padding:5px;
+  }

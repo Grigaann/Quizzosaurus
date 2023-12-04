@@ -4,6 +4,8 @@ import axios from "axios";
 
 import { logout,deleteUser } from '../../Controllers/Auth';
 
+import './profile.css'
+
 import Footer from '../footer';
 import Header from '../header';
 
@@ -49,10 +51,14 @@ export default function Profile() {
                     <h3 id="profmail">E-mail</h3>
                     <p>{email}</p>
                 </div>
+                <div id="elodiv">
+                    <h3 id="profelo">Score</h3>
+                    <p>{}</p>
+                </div>
                 <br/>
-                <button onClick={ChgPwd}><strong>Change password</strong></button>
-                <button onClick={logOut}><strong>Log out</strong></button>
-                <button color='red' onClick={DeleteAccount}><strong>Delete account</strong></button>
+                <button className="button-form" onClick={ChgPwd}><strong>Change password</strong></button>
+                <button className="button-form" onClick={logOut}><strong>Log out</strong></button>
+                <button className="button-form" color='red' onClick={DeleteAccount}><strong>Delete account</strong></button>
             </div>
             <Footer />
         </>

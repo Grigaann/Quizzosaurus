@@ -37,6 +37,7 @@ form {
   border: 3px solid #f1f1f1;
   border-radius: 5px 5px 5px 5px;
   background-color: beige;
+  border:3px solid  rgb(206, 206, 173);
 }
 
 #regform{
@@ -46,12 +47,6 @@ form {
 #logform{
   margin-top:10%;
 }
-
-#editform{
-  margin-top:5%;
-}
-
-
 
 input[type=text],
 input[type=password] {
@@ -64,7 +59,7 @@ input[type=password] {
   box-sizing: border-box;
 }
 
-button {
+.button-form {
   border-radius: 5px 5px 5px 5px;
   background-color: rgb(165, 97, 42);
   color: white;
@@ -79,28 +74,6 @@ button:hover {
   opacity: 0.8;
 }
 
-.toukolai {
-  display: flex;
-}
-
-#checkboxdupauvre {
-  vertical-align: auto;
-  height: 10px;
-  width: 10px;
-  margin-top: 5px;
-  ~ p {
-    margin: 0;
-    margin-left: 5px;
-  }
-}
-.notChecked {
-  background-color: white;
-  border: 1px solid black;
-}
-.checked {
-  background-color: black;
-  border: 1px solid white;
-}
 
 #footer{
   position:fixed;
@@ -112,75 +85,6 @@ button:hover {
  
 }
 
-#trex{
-  position: fixed;
-  opacity: 0.2;
-  top: 10%;
-  left: 4%;
-  max-width:40%;
-  max-height: 40%;
-}
-#diplo{
-  position: fixed;
-  opacity: 0.2;
-  top: 0%;
-  left: 70%;
-  max-height: 60%;
-  max-width:40%;
-}
-
-#ptero{
-  position: fixed;
-  opacity: 0.2;
-  top: 60%;
-  left: 60%;
-  max-width: 60%;
-  max-height: 40%;
-}
-#trice{
-  position: fixed;
-  opacity: 0.2;
-  top: 55%;
-  left: 6%;
-  max-width: 60%;
-  max-height: 40%;
-}
-
-#discharge {
-  text-align:center;
-  margin-top:1%;
-}
-
-.profile {
-  margin: auto;
-  margin-top:9%;
-  width:250px;
-  padding: 10px;
-  background-color: beige;
-  border-radius: 5px 5px 5px 5px;
-}
-
-#proftitle{
-  text-align:center;
-}
-
-#maildiv{
-  margin-top:10px;
-  border-radius: 5px 5px 5px 5px;
-  border:3px solid  rgb(206, 206, 173);
-  background-color:rgb(236, 236, 201);
-  padding:5px;
-}
-
-#usernamediv{
-  border-radius: 5px 5px 5px 5px;
-  border:3px solid  rgb(206, 206, 173);
-  background-color:rgb(236, 236, 201);
-  padding:5px;
-}
 
 
 
-#profmail, #profname{
-  margin-top:0;
-}

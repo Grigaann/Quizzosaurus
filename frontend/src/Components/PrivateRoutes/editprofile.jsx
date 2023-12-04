@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 
 import axios from "axios";
 
+import './editprofile.css'
+
 import SimiliCheckBox from "../../util/SimiliCheckBox";
 import { editprofile } from "../../Controllers/Auth";
 import Footer from '../footer';
@@ -77,7 +79,7 @@ export default function EditProfile() {
                     </label>}
                 </>}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button type="submit" disabled={loading}><strong>Save changes</strong></button>
+                <button className="button-form" type="submit" disabled={loading}><strong>Save changes</strong></button>
             </form>
             <section>
                 <p id="discharge"><Link to='/profile'><strong>Discard Changes</strong></Link></p>

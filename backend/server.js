@@ -167,38 +167,50 @@ app.post('/api/login', async (req, res) => {
 });
 
 //---------- Edit Profile query ---------
-app.post('/api/edit_profile', async (req, res) => {
+app.post("/api/edit_profile", async (req, res) => {
     const loggedUserID = verifyToken(req.cookies.token);
     if (!loggedUserID) {
-        return res.status(401).json({ error: "No user is currently logged in." });
+      return res.status(401).json({ error: "No user is currently logged in." });
     }
-
+  
     const user = req.body.user;
-
+  
     if (!user.username && !user.email) {
-        return res.status(400).json({ error: "Enter data." });
+      return res.status(400).json({ error: "Enter data." });
     }
-
+  
     try {
-        findUser(getUserByID(loggedUserID).username).then(async userFound => {
-            if (user.oldPWD !== undefined && user.newPWD !== undefined) {
-                const passwordMatch = await bcrypt.compare(user.oldPWD, userFound.password)
-                if (!passwordMatch) {
-                    return res.status(401).json({ error: 'Invalid password.' });
-                }
-            }
-
-            db.query("UPDATE users SET username = ?, email = ?"
-                + (user.newPWD === undefined ? "" : ", password = '" + user.newPWD + "'")
-                + " WHERE id= ?", [user.username, user.email, loggedUserID], () => {
-                    res.status(200).json({ redirection: '/profile' });
-                });
-        });
+      const userFound = await findUser(
+        (
+          await getUserByID(loggedUserID)
+        ).username
+      );
+      console.log(userFound);
+      if (user.oldPWD !== undefined && user.newPWD !== undefined) {
+        const passwordMatch = await bcrypt.compare(
+          user.oldPWD,
+          userFound.password
+        );
+        if (!passwordMatch) {
+          return res.status(401).json({ error: "Invalid password." });
+        }
+      }
+  
+      await query(
+        "UPDATE users SET username = ?, email = ?" +
+          (user.newPWD === undefined
+            ? ""
+            : ", password = '" + user.newPWD + "'") +
+          " WHERE id= ?",
+        [user.username, user.email, loggedUserID]
+      );
+  
+      res.status(200).json({ redirection: "/profile" });
     } catch (error) {
-        console.log('Error during applying changes: ', error);
-        res.status(500).json({ error: 'Server error.' });
+      console.log("Error during applying changes: ", error);
+      res.status(500).json({ error: "Server error." });
     }
-});
+  });
 
 
 //---------- Logout query ---------

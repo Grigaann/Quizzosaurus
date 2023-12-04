@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import './SimiliCheckBox.css'
+
 export default function SimiliCheckBox({ text, active, effect }) {
     const [checked, setCheck] = useState('notChecked')
 

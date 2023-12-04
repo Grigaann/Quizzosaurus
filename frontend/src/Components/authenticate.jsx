@@ -34,7 +34,7 @@ export default function Authenticate() {
                     <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete='off' required />
                 </label>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button type="submit" disabled={loading}><strong>Log in</strong></button>
+                <button className="button-form" type="submit" disabled={loading}><strong>Log in</strong></button>
             </form>
             <section>
                 <p id="reglink">Not registered yet ? Create your account <Link to='/register'><strong>here</strong></Link></p>

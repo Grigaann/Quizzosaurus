@@ -49,7 +49,7 @@ export default function Register() {
                     <input type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete='off' required />
                 </label>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button type="submit" disabled={loading}><strong>Sign in</strong></button>
+                <button className="button-form" type="submit" disabled={loading}><strong>Sign in</strong></button>
             </form>
             <section>
                 <p id="loglink">Already have an account? Login <Link to='/authenticate'><strong>here</strong></Link></p>
