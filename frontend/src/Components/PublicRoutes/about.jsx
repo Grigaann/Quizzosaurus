@@ -3,7 +3,7 @@ import React from 'react';
 import Footer from './footer';
 import Header from './header';
 
-import brachio from '../images/brachio.png'
+import brachio from '../../images/brachio.png'
 
 import './about.css';
 

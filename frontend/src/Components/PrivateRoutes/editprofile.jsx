@@ -6,8 +6,8 @@ import axios from "axios";
 
 import SimiliCheckBox from "../../util/SimiliCheckBox";
 import { editprofile } from "../../Controllers/Auth";
-import Footer from '../footer';
-import Header from '../header';
+import Footer from '../PublicRoutes/footer';
+import Header from '../PublicRoutes/header';
 
 export default function EditProfile() {
     const [loading, setLoading] = useState(false);

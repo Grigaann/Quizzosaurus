@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 
-import logo192 from '../images/logo192.png';
+import logo192 from '../../images/logo192.png';
 
 import Footer from './footer';
 import Header from './header';
@@ -18,7 +18,7 @@ export default function LandingPage() {
             To be able to play, you must have an account.</p>
             
             <div className="btns">
-                <button><Link to="/login">LOGIN</Link></button>
+                <button><Link to="/authenticate">LOGIN</Link></button>
                 <p><strong>|</strong></p> 
                 <button><Link to="/register">REGISTER</Link></button>
             </div>

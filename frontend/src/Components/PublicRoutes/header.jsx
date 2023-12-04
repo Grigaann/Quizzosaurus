@@ -1,5 +1,5 @@
 import React from 'react';
-import trice from '../images/trice.png';
+import trice from '../../images/trice.png';
 import { Link } from "react-router-dom";
 
 import './header.css';
