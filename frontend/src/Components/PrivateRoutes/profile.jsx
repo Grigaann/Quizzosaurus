@@ -12,6 +12,7 @@ import Header from '../header';
 export default function Profile() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
+    const [elo, setElo] = useState(0);
 
     const ChgPwd = () => window.location.assign('/editprofile');
 
@@ -30,6 +31,7 @@ export default function Profile() {
                     const resp = await axios.post(`http://localhost:8080/api/checkUser/${response.data.tokenID}`);
                     setUsername(resp.data.user.username);
                     setEmail(resp.data.user.email);
+                    setElo(resp.data.user.elo);
                 });
             } catch (err) { console.log(err); }
         }
@@ -53,7 +55,7 @@ export default function Profile() {
                 </div>
                 <div id="elodiv">
                     <h3 id="profelo">Score</h3>
-                    <p>{}</p>
+                    <p>{elo}</p>
                 </div>
                 <br/>
                 <button className="button-form" onClick={ChgPwd}><strong>Change password</strong></button>

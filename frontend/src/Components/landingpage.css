@@ -6,7 +6,6 @@
   display: block;
   margin-left: auto;
   margin-right: auto;
-  margin-top:10%;
   height: 10%;
   width: auto;
 }
@@ -44,4 +43,18 @@ a:hover {
 
 #btnlog, #btnreg {
   border:none;
+}
+
+@media only screen and (min-width: 480px) {
+  /* styles for devices with a minimum screen width of 480px */
+  #logo{
+    margin-top:10%;
+  }
+}
+  
+  @media only screen and (max-width: 480px) {
+  /* styles for devices with a maximum screen width of 480px */
+  #logo{
+    margin-top:30%;
+  }
 }

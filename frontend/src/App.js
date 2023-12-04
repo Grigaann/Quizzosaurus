@@ -12,13 +12,14 @@ import Authenticate from './Components/authenticate';
 import Profile from './Components/PrivateRoutes/profile'
 import EditProfile from './Components/PrivateRoutes/editprofile';
 import Error from './Components/error';
-
+import Scoreboard from './Components/scoreboard';
 
 export default function App() {
 
   return (
     <Routes>
       <Route path='/' element={ <LandingPage />} />
+      <Route path='/scoreboard' element={ <Scoreboard />} />
       <Route path='/authenticate' element={<Authenticate />} />
       <Route path='/register' element={<Register />} />
       <Route path='/profile' element={<PrivateRoute><Profile /></PrivateRoute>} />

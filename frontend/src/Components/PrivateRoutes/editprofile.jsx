@@ -73,10 +73,10 @@ export default function EditProfile() {
                         New Password:
                         <input type="password" value={newPwd} onChange={(event) => setNewPwd(event.target.value)} autoComplete='off' />
                     </label>
-                    {newPwd && <label>
+                    <label>
                         Confirm password:
                         <input type="password" value={confPwd} onChange={(event) => setConfPwd(event.target.value)} autoComplete='off' />
-                    </label>}
+                    </label>
                 </>}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 <button className="button-form" type="submit" disabled={loading}><strong>Save changes</strong></button>

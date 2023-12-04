@@ -1,6 +1,5 @@
 .profile {
     margin: auto;
-    margin-top:5%;
     width:250px;
     padding: 10px;
     background-color: beige;
@@ -40,3 +39,19 @@
     background-color:rgb(236, 236, 201);
     padding:5px;
   }
+
+  @media only screen and (min-width: 480px) {
+    /* styles for devices with a minimum screen width of 480px */
+    .profile{
+      margin-top:5%;
+    }
+
+    }
+    
+  @media only screen and (max-width: 480px) {
+    /* styles for devices with a maximum screen width of 480px */
+    .profile{
+      margin-top:10%;
+    }
+  }
+  
