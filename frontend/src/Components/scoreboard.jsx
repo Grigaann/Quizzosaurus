@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect} from 'react';
 
 import axios from "axios";
 
@@ -9,44 +9,57 @@ import Header from './header';
 
 import './scoreboard.css';
 
-import { Chart as ChartJS } from 'chart.js/auto'
+import { BarElement, Chart as ChartJS } from 'chart.js/auto'
 import { Chart }            from 'react-chartjs-2'
 
 
 
 
-export default function Quiz() {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [elo, setElo] = useState(0);
-
-    const data = { 
-        labels: ["Max","Ylan","mama","boubou","gentil"],
+export default function Scoreboard() {
+    var data = { 
+        labels: [],
         datasets: [
             {
                 label: "Score",
-                data: [30,21,25,17,8],
+                data: [],
                 backgroundColor:[ "rgb(200, 165, 107)"],
             },
     
         ],
     }
-    
+    useEffect(() => {
+        
+        const fetchData = async () => {
+            try {
+                axios.get('http://localhost:8080/api/topmostPlayers')
+                .then(resp => {
+                    for(let i=0; i<resp.data.topmostPlayers.length; i++){
+                        console.log(resp.data.topmostPlayers[i]);
+                        data.labels.push(resp.data.topmostPlayers[i].username);
+                        data.datasets[0].data.push(resp.data.topmostPlayers[i].elo);
+                    }
+                });
+            } catch (err) {console.log(err); }
+        }
+        fetchData()
+    }, []);
+
     const options = {
         maintainAspectRatio: false,
     }
 
     return (
-        <div className="quizpage">
+        <div className="scoreboardpage">
             <Header />
             <h2 id="scoretitle">Top 5 ranking</h2>
             <div className='container'>
-                <div className='score'>
-                    <Bar data={data} options = {options}/>
-                </div>
+                <Bar 
+                    data={data} 
+                    options = {options}
+                    />
             </div>
             <Footer />
         </div>
     );
 }
-  
+

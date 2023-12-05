@@ -1,57 +1,32 @@
-.container {
-
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width:40%;
-}
-
-canvas {
-    height:400px;
-}
-
-#scoretitle{
-    text-align:center;
-    margin-top:5%;
-}
-
 
 @media only screen and (min-width: 480px) {
     /* styles for devices with a minimum screen width of 480px */
     .container {
-
         display: block;
         margin-left: auto;
         margin-right: auto;
-        width:40%;
-    }
-    
-    canvas {
-        height:400px;
+        width:60%;
+        height:500px;
     }
     
     #scoretitle{
         text-align:center;
-        margin-top:5%;
+        margin-top:3%;
     }
   }
     
     @media only screen and (max-width: 480px) {
     /* styles for devices with a maximum screen width of 480px */
     .container {
-
         display: block;
         margin-left: auto;
         margin-right: auto;
-        width:70%;
-    }
-    
-    canvas {
+        width:80%;
         height:400px;
     }
     
     #scoretitle{
         text-align:center;
-        margin-top:15%;
+        margin-top:10%;
     }
   }
