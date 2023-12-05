@@ -2,15 +2,17 @@ import "./App.css";
 
 import { Routes, Route } from "react-router-dom";
 
-import LandingPage from "./Components/PublicRoutes/landingpage";
-import About from "./Components/PublicRoutes/about";
-import Quiz from "./Components/PrivateRoutes/quiz";
 import PrivateRoute from "./Controllers/private";
-import Register from "./Components/PublicRoutes/register";
-import Authenticate from "./Components/PublicRoutes/authenticate";
-import Profile from "./Components/PrivateRoutes/profile";
-import EditProfile from "./Components/PrivateRoutes/editprofile";
-import Error from "./Components/PublicRoutes/error";
+
+import LandingPage from "./Views/PublicRoutes//LandingPage/landingpage";
+import About from "./Views/PublicRoutes/About/about";
+import Quiz from "./Views/PrivateRoutes/Quiz/quiz";
+import Register from "./Views/PublicRoutes/Register/register";
+import Authenticate from "./Views/PublicRoutes/Authenticate/authenticate";
+import Profile from "./Views/PrivateRoutes/Profile/profile";
+import EditProfile from "./Views/PrivateRoutes/EditProfile/editprofile";
+import ManageQuestions from "./Views/(Admin)/ManageQuestions/managequestions";
+import Error from "./Views/PublicRoutes/Error/error";
 
 export default function App() {
   return (
@@ -39,6 +41,14 @@ export default function App() {
         element={
           <PrivateRoute>
             <Quiz />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/managequestions"
+        element={
+          <PrivateRoute>
+            <ManageQuestions />
           </PrivateRoute>
         }
       />

@@ -256,7 +256,6 @@ app.get("/api/topmostPlayers", (req, res) => {
       "SELECT * FROM users WHERE elo > 0 ORDER BY elo DESC LIMIT 5",
       (err, topmostPlayers) => {
         if (err) throw err;
-        console.log(topmostPlayers);
         res.status(200).json({ topmostPlayers });
       }
     );
@@ -271,7 +270,20 @@ app.get("/api/fetchQuestions", (req, res) => {
   const allQuestions = [];
   db.query("SELECT * FROM questions", (err, result) => {
     if (err) throw err;
-    res.status(200).json({ asArray: result });
+    res.status(200).json({ fetchedData: result });
+  });
+});
+
+app.get("/api/getRandomQuestion", (req, res) => {
+  db.query("SELECT * FROM questions ORDER BY RAND() LIMIT 1", (err, result) => {
+    if (err) {
+      console.error("Error fetching random question:", err);
+      res
+        .status(500)
+        .json({ error: "An error occurred while fetching a random question." });
+    } else {
+      res.status(200).json({ fetchedData: result[0] });
+    }
   });
 });
 
