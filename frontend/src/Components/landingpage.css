@@ -58,3 +58,7 @@ a:hover {
     margin-top:30%;
   }
 }
+
+#hiddenlink:hover{
+  cursor:context-menu;
+}

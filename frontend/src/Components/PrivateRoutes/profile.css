@@ -32,6 +32,19 @@
     margin-top:0;
   }
 
+  .editbtn {
+    border-radius: 5px 5px 5px 5px;
+    width:10%;
+    padding:2px 5px 0px 5px;
+    background-color: rgb(165, 97, 42);
+    border: none;
+    cursor: pointer;
+
+    float:right;
+    margin-top:-18%;
+    margin-right:1%;
+  }
+
   #elodiv{
     margin-top:10px;
     border-radius: 5px 5px 5px 5px;
@@ -51,7 +64,7 @@
   @media only screen and (max-width: 480px) {
     /* styles for devices with a maximum screen width of 480px */
     .profile{
-      margin-top:10%;
+      margin-top:15%;
     }
   }
   

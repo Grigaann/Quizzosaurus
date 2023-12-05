@@ -13,7 +13,7 @@ export default function LandingPage() {
     return (
         <div className="Home">
             <Header />
-            <img src={logo192} id="logo" alt="logo" />
+            <a id="hiddenlink" href="https://www.youtube.com/watch?v=9UIN9mqkvQ8"><img src={logo192} id="logo" alt="logo" /></a>
             <p className='par'><br/><br/>Welcome to <strong>Quizzozaurus</strong>!<br/><br/>
             To be able to play, you must have an account.</p>
             

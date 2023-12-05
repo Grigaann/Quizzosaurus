@@ -248,6 +248,39 @@ function getQuestions(){
     });
 };
 
+/* ================ SCOREBOARD ================== */
+
+app.get("/api/topmostPlayers", (req, res) => {
+    try {
+      db.query(
+        "SELECT * FROM users WHERE elo > 0 ORDER BY elo DESC LIMIT 5",
+        (err, topmostPlayers) => {
+          if (err) throw err;
+          console.log(topmostPlayers);
+          res.status(200).json({ topmostPlayers });
+        }
+      );
+    } catch (err) {
+      res.status(500).json({ error: "Server error." });
+    }
+  });
+  
+
+
+/* =========================== GET ELO =========================== */
+app.get('/api/getUsers', (req, res) => {
+    const users = []; 
+    query('SELECT username,elo from users ORDER BY elo FETCH FIRST 5 ROWS ONLY');
+    db.query(query, (err, results) => {
+        if (err) throw err;
+         users = results;
+    })
+    console.log(users, "Bonjour");
+    
+});
+
+
+
 
 /* =========================== ROUTES setup =========================== */
 
