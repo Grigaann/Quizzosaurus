@@ -1,12 +1,11 @@
 import "./App.css";
-// import Login from './Components/login';
 
 import { Routes, Route } from "react-router-dom";
 
 import LandingPage from "./Components/PublicRoutes/landingpage";
 import About from "./Components/PublicRoutes/about";
 import Quiz from "./Components/PrivateRoutes/quiz";
-import PrivateRoute from "./util/private";
+import PrivateRoute from "./Controllers/private";
 import Register from "./Components/PublicRoutes/register";
 import Authenticate from "./Components/PublicRoutes/authenticate";
 import Profile from "./Components/PrivateRoutes/profile";
@@ -36,18 +35,18 @@ export default function App() {
         }
       />
       <Route
-        path="/about"
-        element={
-          <PrivateRoute>
-            <About />
-          </PrivateRoute>
-        }
-      />
-      <Route
         path="/quiz"
         element={
           <PrivateRoute>
             <Quiz />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/about"
+        element={
+          <PrivateRoute>
+            <About />
           </PrivateRoute>
         }
       />

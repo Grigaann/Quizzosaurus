@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import axios from "axios";
 
-import { logout,deleteUser } from '../../Controllers/Auth';
+import { logout, deleteUser } from '../../Controllers/auth';
 
 import Footer from '../PublicRoutes/footer';
 import Header from '../PublicRoutes/header';

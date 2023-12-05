@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 import SimiliCheckBox from "../../util/SimiliCheckBox";
-import { editprofile } from "../../Controllers/Auth";
+import { editprofile } from "../../Controllers/auth";
 import Footer from '../PublicRoutes/footer';
 import Header from '../PublicRoutes/header';
 

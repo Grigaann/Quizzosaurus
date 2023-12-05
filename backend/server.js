@@ -53,7 +53,7 @@ app.get("/api/validateToken", (req, res) => {
   else res.json({ tokenID: tokenPayload });
 });
 
-/* =========================== SQL setup =========================== */
+/* ==================================== SQL setup =================================== */
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -68,6 +68,8 @@ db.connect((err) => {
 
 const query = require("util").promisify(db.query).bind(db);
 
+/* <=========================== USERS setup ===========================> */
+
 //------- Search User in db ------
 async function findUser(username, email = undefined) {
   try {
@@ -77,7 +79,6 @@ async function findUser(username, email = undefined) {
     );
     for (var user of users) {
       if (user.username === username || user.email === email) {
-        console.log(user);
         return user;
       }
     }
@@ -247,15 +248,32 @@ app.delete("/api/delete_user", (req, res) => {
   }
 });
 
-/* =========================== GET QUIZ =========================== */
-function getQuestions() {
-  const array = [];
+/* ================ SCOREBOARD ================== */
+
+app.get("/api/topmostPlayers", (req, res) => {
+  try {
+    db.query(
+      "SELECT * FROM users WHERE elo > 0 ORDER BY elo DESC LIMIT 5",
+      (err, topmostPlayers) => {
+        if (err) throw err;
+        console.log(topmostPlayers);
+        res.status(200).json({ topmostPlayers });
+      }
+    );
+  } catch (err) {
+    res.status(500).json({ error: "Server error." });
+  }
+});
+
+/* ================ QUIZ ================== */
+
+app.get("/api/fetchQuestions", (req, res) => {
+  const allQuestions = [];
   db.query("SELECT * FROM questions", (err, result) => {
     if (err) throw err;
-    array = result;
-    console.log(array);
+    res.status(200).json({ asArray: result });
   });
-}
+});
 
 /* =========================== ROUTES setup =========================== */
 

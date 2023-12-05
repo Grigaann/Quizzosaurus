@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 
-import { register } from '../../Controllers/Auth';
+import { register } from '../../Controllers/auth';
 import Footer from './footer';
 import Header from './header';
 
