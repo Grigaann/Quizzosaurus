@@ -1,0 +1,43 @@
+.Home {
+    width:100%;
+}
+
+#logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top:10%;
+  height: 10%;
+  width: auto;
+}
+
+.par {
+  font-size:20px;
+  display: block;
+  text-align: center;
+}
+
+.btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btns button{
+  align-self: center;
+  margin:2%;
+  margin-left:5px;
+  margin-right:5px;
+  width:auto;
+  padding:5px;
+  background-color: transparent;
+}
+
+a{
+  text-decoration: none;
+  color:black
+}
+
+a:hover {
+  text-decoration:underline;
+}
