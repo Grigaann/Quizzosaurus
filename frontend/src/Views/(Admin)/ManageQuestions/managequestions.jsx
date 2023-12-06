@@ -14,7 +14,7 @@ export default function ManageQuestions() {
             <Header />
             <section>
                 {allQuestions?.map((question_OBJ, i) => {
-                    return <div>{question_OBJ.question}</div>;
+                    return <div><p>{question_OBJ.question}</p><p>{question_OBJ["res1"]}</p></div>;
                 })}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
             </section>

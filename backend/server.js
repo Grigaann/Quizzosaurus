@@ -283,6 +283,28 @@ async function calculateElo(user, streak, resultQuest) {
   return { newElo, newStreak };
 }
 
+function randomizePossibleAnswers(question) {
+  const responses = [
+    { res: 1, text: question.res1 },
+    { res: 2, text: question.res2 },
+    { res: 3, text: question.res3 },
+    { res: 4, text: question.res4 },
+  ];
+
+  for (let i = responses.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [responses[i], responses[j]] = [responses[j], responses[i]];
+  }
+
+  return {
+    id: question.id,
+    question: question.question,
+    category: question.category,
+    responses,
+    correct: question.correct,
+  };
+}
+
 app.get("/api/fetchQuestions", (req, res) => {
   const allQuestions = [];
   db.query("SELECT * FROM questions", (err, result) => {
@@ -291,7 +313,6 @@ app.get("/api/fetchQuestions", (req, res) => {
   });
 });
 
-// TODO: randomize order of responses
 app.get("/api/getRandomQuestion", (req, res) => {
   db.query("SELECT * FROM questions ORDER BY RAND() LIMIT 1", (err, result) => {
     if (err) {
@@ -300,7 +321,8 @@ app.get("/api/getRandomQuestion", (req, res) => {
         .status(500)
         .json({ error: "An error occurred while fetching a random question." });
     } else {
-      res.status(200).json({ fetchedData: result[0] });
+      const question = randomizePossibleAnswers(result[0]);
+      res.status(200).json({ fetchedData: question });
     }
   });
 });
