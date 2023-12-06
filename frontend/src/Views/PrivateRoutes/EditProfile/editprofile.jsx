@@ -4,12 +4,10 @@ import { useState, useEffect } from "react";
 
 import axios from "axios";
 
-import './editprofile.css'
-
-import SimiliCheckBox from "../../util/SimiliCheckBox";
-import { editprofile } from "../../Controllers/Auth";
-import Footer from '../footer';
-import Header from '../header';
+import SimiliCheckBox from "./Components/SimiliCheckBox";
+import { editprofile } from "../../../Controllers/auth";
+import Footer from '../../Components/Footer/footer';
+import Header from '../../Components/Header/header';
 
 export default function EditProfile() {
     const [loading, setLoading] = useState(false);
@@ -26,8 +24,8 @@ export default function EditProfile() {
 
         const fetchData = async () => {
             try {
-                axios.get('http://localhost:8080/api/validateToken', { withCredentials: true }).then(async response => {
-                    const resp = await axios.post(`http://localhost:8080/api/checkUser/${response.data.tokenID}`);
+                axios.get(`${process.env.REACT_APP_API_URL}/api/validateToken`, { withCredentials: true }).then(async response => {
+                    const resp = await axios.post(`${process.env.REACT_APP_API_URL}/api/checkUser/${response.data.tokenID}`);
                     setUsername(resp.data.user.username);
                     setEmail(resp.data.user.email);
                 });
@@ -52,8 +50,8 @@ export default function EditProfile() {
     return (
         <>
             <Header />
-            <form id="editform" onSubmit={handleSubmit}>
-                <h2 id="titleform">Edit Profile</h2>
+            <form onSubmit={handleSubmit}>
+                <h1>Edit your profile data</h1>
                 <label>
                     Username:
                     <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} autoComplete='off' required />
@@ -73,16 +71,16 @@ export default function EditProfile() {
                         New Password:
                         <input type="password" value={newPwd} onChange={(event) => setNewPwd(event.target.value)} autoComplete='off' />
                     </label>
-                    <label>
+                    {newPwd && <label>
                         Confirm password:
                         <input type="password" value={confPwd} onChange={(event) => setConfPwd(event.target.value)} autoComplete='off' />
-                    </label>
+                    </label>}
                 </>}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button className="button-form" type="submit" disabled={loading}><strong>Save changes</strong></button>
+                <button type="submit" disabled={loading}>Save changes</button>
             </form>
             <section>
-                <p id="discharge"><Link to='/profile'><strong>Discard Changes</strong></Link></p>
+                <Link to='/profile'>Discard changes</Link>
             </section>
             <Footer />
         </>

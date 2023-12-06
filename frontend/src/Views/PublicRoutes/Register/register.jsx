@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 
-import { register } from '../Controllers/Auth';
-import Footer from './footer';
-import Header from './header';
+import { register } from '../../../Controllers/auth';
+import Footer from '../../Components//Footer/footer';
+import Header from '../../Components/Header/header';
 
 import './register.css'
 

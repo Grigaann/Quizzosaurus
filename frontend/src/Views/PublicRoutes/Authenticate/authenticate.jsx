@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 
-import {login} from '../Controllers/Auth';
-import Footer from './footer';
-import Header from './header';
+import { login } from '../../../Controllers/auth';
+import Footer from '../../Components//Footer/footer';
+import Header from '../../Components/Header/header';
 
 import './authenticate.css'
 
@@ -17,7 +17,7 @@ export default function Authenticate() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        await login({usrnm: username, pwd: password}, setError);
+        await login({ usrnm: username, pwd: password }, setError);
         setLoading(false);
     };
     return (
