@@ -32,6 +32,7 @@ app.listen(port, () => {
 
 const secretKey = 'oftidyifuom<-z654thtgspùilyuktjdrhsdyjfuki34loitdrehrqqstr,c;v:m-dty2jch,gjvfuktd7yjrshdjyh,g';
 
+
 function generateToken(id) {
     const payload = { id };
     const options = { expiresIn: '12h' };

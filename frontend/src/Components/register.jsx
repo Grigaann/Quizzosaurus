@@ -9,7 +9,6 @@ import './register.css'
 
 export default function Register() {
     const [loading, setLoading] = useState(false);
-
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

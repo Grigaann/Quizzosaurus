@@ -80,11 +80,7 @@ button:hover {
   font-family:Impact, 'Arial Narrow Bold', sans-serif;
   font-size:20px;
   color:black;
-  bottom:0;  /* on le colle en bas */
+  bottom:0;
   width:100%;
  
 }
-
-
-
-
