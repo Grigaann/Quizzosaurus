@@ -7,21 +7,13 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
-  background-color: #282c34;
+  background-color: rgb(204, 185, 123);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 .App-link {
@@ -40,14 +32,25 @@
 
 form {
   margin: auto;
-  margin-top: 10%;
   width: 15%;
+  padding:10px;
   border: 3px solid #f1f1f1;
+  border-radius: 5px 5px 5px 5px;
   background-color: beige;
+  border:3px solid  rgb(206, 206, 173);
+}
+
+#regform{
+  margin-top:8%;
+}
+
+#logform{
+  margin-top:10%;
 }
 
 input[type=text],
 input[type=password] {
+  border-radius: 5px 5px 5px 5px;
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -56,7 +59,8 @@ input[type=password] {
   box-sizing: border-box;
 }
 
-button {
+.button-form {
+  border-radius: 5px 5px 5px 5px;
   background-color: rgb(165, 97, 42);
   color: white;
   padding: 14px 20px;
@@ -68,4 +72,15 @@ button {
 
 button:hover {
   opacity: 0.8;
+}
+
+
+#footer{
+  position:fixed;
+  font-family:Impact, 'Arial Narrow Bold', sans-serif;
+  font-size:20px;
+  color:black;
+  bottom:0;
+  width:100%;
+ 
 }

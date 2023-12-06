@@ -1,0 +1,64 @@
+.Home {
+    width:100%;
+}
+
+#logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  height: 10%;
+  width: auto;
+}
+
+.par {
+  font-size:20px;
+  display: block;
+  text-align: center;
+}
+
+.btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btns button{
+  align-self: center;
+  margin:2%;
+  margin-left:5px;
+  margin-right:5px;
+  width:auto;
+  padding:5px;
+  background-color: transparent;
+}
+
+a{
+  text-decoration: none;
+  color:black
+}
+
+a:hover {
+  text-decoration:underline;
+}
+
+#btnlog, #btnreg {
+  border:none;
+}
+
+@media only screen and (min-width: 480px) {
+  /* styles for devices with a minimum screen width of 480px */
+  #logo{
+    margin-top:10%;
+  }
+}
+  
+  @media only screen and (max-width: 480px) {
+  /* styles for devices with a maximum screen width of 480px */
+  #logo{
+    margin-top:30%;
+  }
+}
+
+#hiddenlink:hover{
+  cursor:context-menu;
+}

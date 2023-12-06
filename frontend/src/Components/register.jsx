@@ -1,64 +1,59 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
-import axios from 'axios';
-import bcrypt from 'bcryptjs';
+
+import { register } from '../Controllers/Auth';
+import Footer from './footer';
+import Header from './header';
+
+import './register.css'
 
 export default function Register() {
+    const [loading, setLoading] = useState(false);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState('');
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         if (password !== confirmPassword) {
             alert('Passwords do not match!');
             return;
         }
-        bcrypt.genSalt(10).then(salt => {
-            bcrypt.hash(password, salt)
-                .then(async (hashed) => {
-                    await axios.post('http://localhost:8080/api/signup', {
-                        username: username,
-                        email: email,
-                        password: hashed
-                    })
-                        .then((response) => {
-                            console.log(response);
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        });
-                });
-        });
+        setLoading(true);
+        await register({ usrnm: username, eml: email, pwd: password }, setError);
+        setLoading(false);
     };
 
     return (
         <>
-            <form onSubmit={handleSubmit}>
-                <h4>Sign up here</h4>
+            <Header />
+            <form id="regform" onSubmit={handleSubmit}>
+                <h2 id="titleformreg">Sign Up</h2>
                 <label>
                     Username:
-                    <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} />
+                    <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} autoComplete='off' required />
                 </label>
                 <label>
                     Email:
-                    <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+                    <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete='off' required />
                 </label>
                 <label>
                     Password:
-                    <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+                    <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete='off' required />
                 </label>
                 <label>
                     Confirm Password:
-                    <input type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} />
+                    <input type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete='off' required />
                 </label>
-                <button type="submit">Sign up</button>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                <button className="button-form" type="submit" disabled={loading}><strong>Sign in</strong></button>
             </form>
             <section>
-            <p>Already have an account? <Link to='/login'>Login instead</Link></p>
+                <p id="loglink">Already have an account? Login <Link to='/authenticate'><strong>here</strong></Link></p>
             </section>
+            <Footer />
         </>
     );
 }
