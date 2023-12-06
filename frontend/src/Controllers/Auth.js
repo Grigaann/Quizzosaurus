@@ -10,18 +10,21 @@ async function hashing(pwd) {
 export const register = async (user, setError) => {
   try {
     const avlbl = await axios.post(
-      `http://localhost:8080/api/checkUser/${null}`,
+      `${process.env.REACT_APP_API_URL}/api/checkUser/${null}`,
       { username: user.usrnm, email: user.eml }
     );
     if (!avlbl.data.available) {
       setError("Username or email is already taken!");
       return;
     } else {
-      const response = await axios.post("http://localhost:8080/api/signup", {
-        username: user.usrnm,
-        email: user.eml,
-        password: await hashing(user.pwd),
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/signup`,
+        {
+          username: user.usrnm,
+          email: user.eml,
+          password: await hashing(user.pwd),
+        }
+      );
       if (response.data.redirection) {
         console.log("Registration successful!");
         window.location.assign(response.data.redirection);
@@ -40,7 +43,7 @@ export const register = async (user, setError) => {
 export const login = async (user, setError) => {
   try {
     const response = await axios.post(
-      "http://localhost:8080/api/login",
+      `${process.env.REACT_APP_API_URL}/api/login`,
       {
         username: user.usrnm,
         password: user.pwd,
@@ -66,7 +69,7 @@ export const login = async (user, setError) => {
 export const editprofile = async ({ user }, chgpwd, setError) => {
   try {
     const response = await axios.post(
-      "http://localhost:8080/api/edit_profile",
+      `${process.env.REACT_APP_API_URL}/api/edit_profile`,
       {
         user: {
           username: user.username,
@@ -96,7 +99,7 @@ export const editprofile = async ({ user }, chgpwd, setError) => {
 export const logout = async () => {
   try {
     const response = await axios.post(
-      "http://localhost:8080/api/logout",
+      `${process.env.REACT_APP_API_URL}/api/logout`,
       {},
       { withCredentials: true }
     );
@@ -116,7 +119,7 @@ export const logout = async () => {
 export const deleteUser = async () => {
   try {
     const response = await axios.delete(
-      "http://localhost:8080/api/delete_user",
+      `${process.env.REACT_APP_API_URL}/api/delete_user`,
       { withCredentials: true }
     );
     if (response.data.redirection) {

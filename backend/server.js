@@ -1,4 +1,6 @@
-const port = 8080;
+require("dotenv").config();
+
+const port = process.env.BACKEND_PORT;
 
 var createError = require("http-errors");
 var express = require("express");
@@ -30,8 +32,7 @@ app.listen(port, () => {
 
 /* =========================== TOKEN setup =========================== */
 
-const secretKey =
-  "oftidyifuom<-z654thtgspùilyuktjdrhsdyjfuki34loitdrehrqqstr,c;v:m-dty2jch,gjvfuktd7yjrshdjyh,g";
+const secretKey = process.env.SECRET_KEY;
 
 function generateToken(id) {
   const payload = { id };
@@ -266,6 +267,33 @@ app.get("/api/topmostPlayers", (req, res) => {
 
 /* ================ QUIZ ================== */
 
+async function calculateElo(user, streak, resultQuest) {
+  const point = 10;
+
+  let newElo;
+
+  const currentElo = user.elo;
+  if (resultQuest === false) {
+    if (streak > -5) newElo = currentElo - point / 2;
+    else newElo = currentElo - point;
+  } else {
+    if (streak < 5) newElo = currentElo + point;
+    else newElo = currentElo + 2 * point;
+  }
+
+  let newStreak;
+
+  newStreak = resultQuest
+    ? streak < 0
+      ? 1
+      : streak + 1
+    : streak > 0
+    ? -1
+    : streak - 1;
+
+  return { newElo, newStreak };
+}
+
 app.get("/api/fetchQuestions", (req, res) => {
   const allQuestions = [];
   db.query("SELECT * FROM questions", (err, result) => {
@@ -274,6 +302,7 @@ app.get("/api/fetchQuestions", (req, res) => {
   });
 });
 
+// TODO: randomize order of responses
 app.get("/api/getRandomQuestion", (req, res) => {
   db.query("SELECT * FROM questions ORDER BY RAND() LIMIT 1", (err, result) => {
     if (err) {
@@ -284,6 +313,24 @@ app.get("/api/getRandomQuestion", (req, res) => {
     } else {
       res.status(200).json({ fetchedData: result[0] });
     }
+  });
+});
+
+app.patch("/api/verifyAnswer", async (req, res) => {
+  const loggedUserID = verifyToken(req.cookies.token);
+  const user = await getUserByID(loggedUserID);
+
+  const { userAns, streak } = req.body;
+
+  const elow = await calculateElo(user, streak, userAns);
+  await query("UPDATE users SET elo = ? WHERE id= ?", [
+    elow.newElo < 0 ? 0 : elow.newElo,
+    loggedUserID,
+  ]);
+  res.status(200).json({
+    userAns,
+    elo: elow.newElo,
+    streak: elow.newStreak,
   });
 });
 

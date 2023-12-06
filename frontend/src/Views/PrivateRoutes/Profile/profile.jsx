@@ -24,8 +24,8 @@ export default function Profile() {
 
         const fetchData = async () => {
             try {
-                axios.get('http://localhost:8080/api/validateToken', { withCredentials: true }).then(async response => {
-                    const resp = await axios.post(`http://localhost:8080/api/checkUser/${response.data.tokenID}`);
+                axios.get(`${process.env.REACT_APP_API_URL}/api/validateToken`, { withCredentials: true }).then(async response => {
+                    const resp = await axios.post(`${process.env.REACT_APP_API_URL}/api/checkUser/${response.data.tokenID}`);
                     setUsername(resp.data.user.username);
                     setEmail(resp.data.user.email);
                 });
