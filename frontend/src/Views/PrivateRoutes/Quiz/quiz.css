@@ -1,16 +1,10 @@
-#quiz-container {
-    max-width: 90%;
-    margin: auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-}
-
 #question-asked {
     background-color: rgb(165, 97, 42);
     color: #FFFFFF;
     padding: 20px;
     border-radius: 10px;
-    margin-bottom: 20px;
+    margin-top:15%;
+    margin-bottom: 5%;
     font-size: 24px;
     text-align: center;
 }
@@ -43,10 +37,81 @@
     pointer-events: none;
 }
 
+
 .good_answer {
     background-color: #228B22 !important;
 }
 
 .wrong_answer {
     background-color: #B22222 !important;
+    animation: shake 0.5s;
+    animation-iteration-count: 2;
 }
+
+
+button.shake{
+    animation: shake 1s infinite;
+}
+@keyframes shake {
+  0%  { transform: translate(2px, 1px)   rotate(0deg);  }
+  10% { transform: translate(-1px, -2px) rotate(-2deg); }
+  20% { transform: translate(-3px, 0px)  rotate(3deg);  }
+  30% { transform: translate(0px, 2px)   rotate(0deg);  }
+  40% { transform: translate(1px, -1px)  rotate(1deg);  }
+  50% { transform: translate(-1px, 2px)  rotate(-1deg); }
+  60% { transform: translate(-3px, 1px)  rotate(0deg);  }
+  70% { transform: translate(2px, 1px)   rotate(-2deg); }
+  80% { transform: translate(-1px, -1px) rotate(4deg);  }
+  90% { transform: translate(2px, 2px)   rotate(0deg);  }
+  100%{ transform: translate(1px, -2px)  rotate(-1deg); }
+}
+
+
+@media only screen and (min-width: 480px) {
+    #quiz-container {
+        max-width: 60%;
+        margin: auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+    
+    #question-asked {
+        background-color: rgb(165, 97, 42);
+        color: #FFFFFF;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top:15%;
+        margin-bottom: 5%;
+        font-size: 24px;
+        text-align: center;
+    }
+
+    #trashtalk {
+        margin-top:5%;
+        text-align:center;
+        font-size:24px;
+    }
+
+}
+
+@media only screen and (max-width: 480px) {
+    #quiz-container {
+        max-width: 80%;
+        margin: auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+    
+    #question-asked {
+        background-color: rgb(165, 97, 42);
+        color: #FFFFFF;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top:30%;
+        margin-bottom: 10%;
+        font-size: 24px;
+        text-align: center;
+    }
+
+}
+

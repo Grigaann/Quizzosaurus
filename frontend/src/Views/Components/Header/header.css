@@ -46,7 +46,6 @@ li a:hover:not(.active) {
   color: black;
   padding: 14px 16px;
   background-color: inherit;
-  font-family: inherit;
   margin: 0;
 }
 
@@ -71,7 +70,7 @@ li a:hover:not(.active) {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: rgb(233, 215, 151);
+  background-color:rgb(215, 197, 135) ;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
@@ -90,13 +89,14 @@ li a:hover:not(.active) {
   background-color: rgb(183, 165, 107);
 }
 
-.dropdown:hover .dropdown-content {
+.dropdown .dropdown-content {
   display: block;
 }
 
 .navbar{
+  padding-right: 20px;
   display:flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   margin: 0;
   overflow: hidden;
@@ -106,4 +106,12 @@ li a:hover:not(.active) {
 
 .dropdown-link:hover{
   text-decoration: none;
+}
+
+.dropbtn i.fa-bars {
+  transition: transform 0.5s ease;
+}
+
+.rotate i.fa-bars {
+  transform: rotate(90deg);
 }
