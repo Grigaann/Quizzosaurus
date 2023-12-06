@@ -11,7 +11,7 @@ import Profile from "./Views/PrivateRoutes/Profile/profile";
 import EditProfile from "./Views/PrivateRoutes/EditProfile/editprofile";
 import Quiz from "./Views/PrivateRoutes/Quiz/quiz";
 import ManageQuestions from "./Views/(Admin)/ManageQuestions/managequestions";
-import Scoreboard from './Components/scoreboard';
+import Scoreboard from "./Views/PublicRoutes/Scoreboard/scoreboard";
 import About from "./Views/PublicRoutes/About/about";
 import Error from "./Views/PublicRoutes/Error/error";
 
@@ -53,15 +53,8 @@ export default function App() {
           </PrivateRoute>
         }
       />
-      <Route path='/scoreboard' element={ <Scoreboard />} />
-      <Route
-        path="/about"
-        element={
-          <PrivateRoute>
-            <About />
-          </PrivateRoute>
-        }
-      />
+      <Route path="/scoreboard" element={<Scoreboard />} />
+      <Route path="/about" element={<About />} />
       <Route path="*" element={<Error />} />
     </Routes>
   );

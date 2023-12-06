@@ -20,7 +20,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(
+  cors({
+    credentials: true,
+    origin: `http://localhost:${process.env.FRONTEND_PORT}`,
+  })
+);
 
 app.set("views", __dirname, "/Components");
 app.set("view engine", "jsx");

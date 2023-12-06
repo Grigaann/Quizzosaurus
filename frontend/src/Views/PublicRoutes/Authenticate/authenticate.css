@@ -12,14 +12,12 @@ form {
   }
 
   @media only screen and (min-width: 480px) {
-    /* styles for devices with a minimum screen width of 480px */
     #logform{
       margin-top:10%;
     }
   }
     
     @media only screen and (max-width: 480px) {
-    /* styles for devices with a maximum screen width of 480px */
     #logform{
         margin-top:30%;
       }

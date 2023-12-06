@@ -1,5 +1,5 @@
 .Home {
-    width:100%;
+  width: 100%;
 }
 
 #logo {
@@ -11,7 +11,7 @@
 }
 
 .par {
-  font-size:20px;
+  font-size: 20px;
   display: block;
   text-align: center;
 }
@@ -22,43 +22,42 @@
   align-items: center;
 }
 
-.btns button{
+.btns button {
   align-self: center;
-  margin:2%;
-  margin-left:5px;
-  margin-right:5px;
-  width:auto;
-  padding:5px;
+  margin: 2%;
+  margin-left: 5px;
+  margin-right: 5px;
+  width: auto;
+  padding: 5px;
   background-color: transparent;
 }
 
-a{
+a {
   text-decoration: none;
-  color:black
+  color: black
 }
 
 a:hover {
-  text-decoration:underline;
+  text-decoration: underline;
 }
 
-#btnlog, #btnreg {
-  border:none;
+#btnlog,
+#btnreg {
+  border: none;
 }
 
 @media only screen and (min-width: 480px) {
-  /* styles for devices with a minimum screen width of 480px */
-  #logo{
-    margin-top:10%;
-  }
-}
-  
-  @media only screen and (max-width: 480px) {
-  /* styles for devices with a maximum screen width of 480px */
-  #logo{
-    margin-top:30%;
+  #logo {
+    margin-top: 10%;
   }
 }
 
-#hiddenlink:hover{
-  cursor:context-menu;
+@media only screen and (max-width: 480px) {
+  #logo {
+    margin-top: 30%;
+  }
+}
+
+#hiddenlink:hover {
+  cursor: context-menu;
 }
