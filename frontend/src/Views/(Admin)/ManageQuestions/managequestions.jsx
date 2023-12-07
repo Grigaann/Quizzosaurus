@@ -4,15 +4,18 @@ import { useFetch } from '../../../Controllers/useFetch';
 
 import Header from '../../Components/Header/header';
 import Footer from '../../Components/Footer/footer';
-import { AddQuestionForm } from './Components/AddQuestionForm/addquestionform';
+import { AddQuestionForm } from './Components/QuestionForm/AddQuestionForm/addquestionform';
+import { EditQuestionForm } from './Components/QuestionForm/EditQuestionForm/editquestionform';
 
 import './managequestions.css';
+import axios from 'axios';
 
 export default function ManageQuestions() {
     const { data: allQuestions, error } = useFetch(`${process.env.REACT_APP_API_URL}/api/fetchQuestions`);
     const [searchTerm, setSearchTerm] = useState('');
     const [extendedIds, setExtendedIds] = useState([]);
     const [isAddQuestionOpen, setIsAddQuestionOpen] = useState(false);
+    const [isEditQuestionOpen, setIsEditQuestionOpen] = useState({ state: false, qestionID: null });
 
     const filteredQuestions = useMemo(() => {
         if (!allQuestions) {
@@ -31,17 +34,22 @@ export default function ManageQuestions() {
     const openAddQuestionForm = () => {
         setIsAddQuestionOpen(true);
     };
-
     const closeAddQuestionForm = () => {
         setIsAddQuestionOpen(false);
+        window.location.reload();
     };
 
-    const handleEdit = (questionId) => {
-        console.log(`Editing question with ID: ${questionId}`);
+    const openEditQuestionForm = (id) => {
+        setIsEditQuestionOpen({ state: true, questionID: id });
+    };
+    const closeEditQuestionForm = () => {
+        setIsEditQuestionOpen({ state: false, questionID: null });
+        window.location.reload();
     };
 
     const handleDelete = (questionId) => {
-        console.log(`Deleting question with ID: ${questionId}`);
+        axios.delete(`${process.env.REACT_APP_API_URL}/api/deleteQuestion/${questionId}`);
+        window.location.reload();
     };
 
     const handleClick = (questionId) => {
@@ -72,7 +80,7 @@ export default function ManageQuestions() {
                                     <div className='question-header'>
                                         <p>{question_OBJ.question}</p>
                                         <div className="question-actions">
-                                            <span onClick={() => handleEdit(question_OBJ.id)}>✏️</span>
+                                            <span onClick={() => openEditQuestionForm(question_OBJ.id)}>✏️</span>
                                             <span onClick={() => handleDelete(question_OBJ.id)}>❌</span>
                                         </div>
                                     </div>
@@ -92,7 +100,7 @@ export default function ManageQuestions() {
                                 </div>
                             ))
                         ) : (
-                            <p>{allQuestions && allQuestions.length > 0 ? 'No matching questions.' : 'No questions available.'}</p>
+                            <p>{allQuestions && allQuestions.length > 0 ? 'Oops, nothing of that sort was found.' : 'No questions available.'}</p>
                         )}
                     </>
                 )}
@@ -100,11 +108,11 @@ export default function ManageQuestions() {
             </section>
 
             {isAddQuestionOpen && (
-                <div className="modal-background">
-                    <AddQuestionForm onClose={closeAddQuestionForm} />
-                </div>
+                <AddQuestionForm onClose={closeAddQuestionForm} />
             )}
-
+            {isEditQuestionOpen.state && (
+                <EditQuestionForm questionID={isEditQuestionOpen.questionID} onClose={closeEditQuestionForm} />
+            )}
             <Footer />
         </>
     );

@@ -62,7 +62,6 @@ app.get("/api/validateToken", (req, res) => {
 app.get("/api/validateAdmin", async (req, res) => {
   try {
     const userId = verifyToken(req.cookies.token);
-    console.log(userId);
     if (!userId) {
       return res.status(401).json({ error: "Invalid token. Unauthorized." });
     }
@@ -225,7 +224,6 @@ app.put("/api/edit_profile", async (req, res) => {
         await getUserByID(loggedUserID)
       ).username
     );
-    console.log(userFound);
     if (user.oldPWD !== undefined && user.newPWD !== undefined) {
       const passwordMatch = await bcrypt.compare(
         user.oldPWD,
@@ -352,7 +350,7 @@ app.get("/api/fetchQuestions", (req, res) => {
   });
 });
 
-app.get("/api/getRandomQuestion", (req, res) => {
+app.get("/api/getQuestion", (req, res) => {
   db.query("SELECT * FROM questions ORDER BY RAND() LIMIT 1", (err, result) => {
     if (err) {
       console.error("Error fetching random question:", err);
@@ -364,6 +362,24 @@ app.get("/api/getRandomQuestion", (req, res) => {
       res.status(200).json({ fetchedData: question });
     }
   });
+});
+
+app.get("/api/getQuestion/:id", (req, res) => {
+  const questionID = req.params.id;
+  db.query(
+    "SELECT * FROM questions WHERE id= ?",
+    [questionID],
+    (err, result) => {
+      if (err) {
+        console.error("Error fetching question:", err);
+        res.status(500).json({
+          error: "An error occurred while fetching the given question.",
+        });
+      } else {
+        res.status(200).json({ fetchedData: result[0] });
+      }
+    }
+  );
 });
 
 //------- Add Question query --------
@@ -390,7 +406,9 @@ app.post("/api/addQuestion", (req, res) => {
 //------- Edit Question query --------
 app.put("/api/editQuestion/:questionId", (req, res) => {
   const questionId = req.params.questionId;
-  const { question, category, res1, res2, res3, res4, correct } = req.body;
+  console.log(questionId);
+  const { question, category, res1, res2, res3, res4, correct } =
+    req.body.formData;
 
   db.query(
     "UPDATE questions SET question = ?, category = ?, res1 = ?, res2 = ?, res3 = ?, res4 = ?, correct = ? WHERE id = ?",

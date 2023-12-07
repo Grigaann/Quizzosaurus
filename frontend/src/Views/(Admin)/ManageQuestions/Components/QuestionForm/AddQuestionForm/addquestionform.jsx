@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-import { InputText } from '../../../../Components/InputText/inputtext';
+import { InputText } from '../../../../../Components/InputText/inputtext';
 
 import axios from 'axios';
 
-import './addquestionform.css';
+import '../questionform.css';
 
 export const AddQuestionForm = ({ onClose }) => {
     const reset = {
@@ -25,8 +25,6 @@ export const AddQuestionForm = ({ onClose }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        console.log(formData);
 
         axios.post(`${process.env.REACT_APP_API_URL}/api/addQuestion`, { formData }, (err) => {
             if (err) throw err;

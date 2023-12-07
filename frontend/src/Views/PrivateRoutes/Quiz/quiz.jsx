@@ -14,7 +14,7 @@ export default function Quiz() {
     const [isLoading, setLoading] = useState(false);
     const [streak, setStreak] = useState(() => Number(localStorage.getItem('streak')) || 0);
 
-    const { data: question_OBJ, error } = useFetch(`${process.env.REACT_APP_API_URL}/api/getRandomQuestion`);
+    const { data: question_OBJ, error } = useFetch(`${process.env.REACT_APP_API_URL}/api/getQuestion`);
 
 
     useEffect(() => {
