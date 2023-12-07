@@ -89,9 +89,9 @@ export const AddQuestionForm = ({ onClose }) => {
                         <option value="3">Option 3</option>
                         <option value="4">Option 4</option>
                     </select>
-                    <div className="form-buttons">
-                        <button type="submit">Add Question</button>
-                        <button type="button" onClick={handleCancel}>Cancel</button>
+                    <div id="form-buttons">
+                        <button className="button-form" type="submit">Add</button>
+                        <button className="button-form" type="button" onClick={handleCancel}>Cancel</button>
                     </div>
                 </form>
             </div>

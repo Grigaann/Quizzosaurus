@@ -22,6 +22,26 @@
     margin-bottom: 20px;
 }
 
+#form-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.button-form {
+    border-radius: 5px 5px 5px 5px;
+    background-color: rgb(165, 97, 42);
+    color: white;
+    padding: 20px 15px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 40%;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
 .blurred {
     filter: blur(5px);
     pointer-events: none;

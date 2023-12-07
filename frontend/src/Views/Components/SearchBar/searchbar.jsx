@@ -17,14 +17,6 @@ export const SearchBar = ({ onSearch }) => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
             />
-            {searchTerm && (
-                <button
-                    id="search-btn"
-                    onClick={() => onSearch(searchTerm)}
-                >
-                    Search
-                </button>
-            )}
         </div>
     );
 };

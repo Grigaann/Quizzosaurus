@@ -55,15 +55,9 @@ export default function ManageQuestions() {
     return (
         <>
             <Header />
+            <SearchBar onSearch={handleSearch} />
+            <button id="action-btn" onClick={openAddQuestionForm}>Add Question</button>
             <section id='question-container' className={isAddQuestionOpen ? 'blurred' : ''}>
-                <div>
-                    <SearchBar onSearch={handleSearch} />
-
-                    <div className="action-buttons">
-                        <button onClick={openAddQuestionForm}>Add Question</button>
-                    </div>
-                </div>
-
                 {allQuestions === null ? (
                     <p>Error loading questions.</p>
                 ) : (
@@ -82,17 +76,19 @@ export default function ManageQuestions() {
                                             <span onClick={() => handleDelete(question_OBJ.id)}>❌</span>
                                         </div>
                                     </div>
-                                    {Object.keys(question_OBJ).map((items) => {
-                                        if (items.includes('res')) {
-                                            const key = items;
-                                            return (
-                                                <p key={key} className={"answers " + (alternate_colours % 2 === 0 ? "colour2" : "colour1")} id={`answer${key}`}>
-                                                    {question_OBJ[items]}
-                                                </p>
-                                            );
-                                        }
-                                        return null;
-                                    })}
+                                    <div id="shrinks">
+                                        {Object.keys(question_OBJ).map((items) => {
+                                            if (items.includes('res')) {
+                                                const key = items;
+                                                return (
+                                                    <p key={key} className={"answers " + (alternate_colours % 2 === 0 ? "colour2" : "colour1")} id={`answer${key}`}>
+                                                        {question_OBJ[items]}
+                                                    </p>
+                                                );
+                                            }
+                                            return null;
+                                        })}
+                                    </div>
                                 </div>
                             ))
                         ) : (
