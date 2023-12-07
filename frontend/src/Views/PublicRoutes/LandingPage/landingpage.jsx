@@ -14,13 +14,10 @@ export default function LandingPage() {
         <div className="Home">
             <Header />
             <a id="hiddenlink" href="https://www.youtube.com/watch?v=WH6Jfqen1H8"><img src={logo192} id="logo" alt="logo" /></a>
-            <p className='par'><br /><br />Welcome to <strong>Quizzozaurus</strong>!<br /><br />
-                To be able to play, you must have an account.</p>
+            <p className='par'><br/>Welcome to <strong>Quizzozaurus</strong>!</p>
 
             <div className="btns">
-                <button id="btnlog"><Link to="/authenticate">LOGIN</Link></button>
-                <p><strong>|</strong></p>
-                <button id="btnreg"><Link to="/register">REGISTER</Link></button>
+                <Link id="btnlog" to="/quiz"><strong>PLAY</strong></Link>
             </div>
 
             <Footer />

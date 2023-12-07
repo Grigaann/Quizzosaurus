@@ -93,16 +93,7 @@ li a:hover:not(.active) {
   display: block;
 }
 
-.navbar{
-  padding-right: 20px;
-  display:flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0;
-  overflow: hidden;
-  list-style-type: none;
-  background-color:rgb(215, 197, 135) ;
-}
+
 
 .dropdown-link:hover{
   text-decoration: none;
@@ -114,4 +105,32 @@ li a:hover:not(.active) {
 
 .rotate i.fa-bars {
   transform: rotate(90deg);
+}
+
+@media only screen and (min-width: 480px) {
+  .navbar{
+    padding-right: 20px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    overflow: hidden;
+    list-style-type: none;
+    background-color:rgb(215, 197, 135) ;
+  }
+
+}
+
+@media only screen and (max-width: 480px) {
+  .navbar{
+    padding-right: 10px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    overflow: hidden;
+    list-style-type: none;
+    background-color:rgb(215, 197, 135) ;
+  }
+
 }

@@ -25,7 +25,7 @@ export default function Quiz() {
         "Who needs correct answers when you’ve got style?",
         "Remember, it’s not about winning, it’s about… Oh wait, it is."
     ];
-
+    
     useEffect(() => {
         localStorage.setItem('streak', streak);
     }, [streak]);
