@@ -3,6 +3,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 
 import PrivateRoute from "./Controllers/private";
+import AdminAcces from "./Controllers/adminAccess";
 
 import LandingPage from "./Views/PublicRoutes//LandingPage/landingpage";
 import Register from "./Views/PublicRoutes/Register/register";
@@ -49,7 +50,9 @@ export default function App() {
         path="/managequestions"
         element={
           <PrivateRoute>
-            <ManageQuestions />
+            <AdminAcces>
+              <ManageQuestions />
+            </AdminAcces>
           </PrivateRoute>
         }
       />

@@ -30,7 +30,7 @@ export default function Quiz() {
             },
             { withCredentials: true })
             .then((updated) => {
-                document.getElementById('answer' + question_OBJ.correct).classList.add('good_answer')
+                document.getElementById('answer' + question_OBJ.correct).classList.add('good_answer');
                 if (!updated.data.userAns)
                     document.getElementById('answer' + key).classList.add("wrong_answer");
                 setStreak(updated.data.streak);

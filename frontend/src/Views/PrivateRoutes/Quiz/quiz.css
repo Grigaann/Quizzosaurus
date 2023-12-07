@@ -44,9 +44,9 @@
 }
 
 .good_answer {
-    background-color: #228B22 !important;
+    background-color: #228B22;
 }
 
 .wrong_answer {
-    background-color: #B22222 !important;
+    background-color: #B22222;
 }

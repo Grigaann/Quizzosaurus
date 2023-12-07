@@ -21,6 +21,7 @@ export default function Header() {
           <div className='dropdown-content'>
             <Link className="dropdown-link" to='/'><strong>Home</strong></Link>
             <Link className="dropdown-link" to='/quiz'><strong>Quiz</strong></Link>
+            <Link className="dropdown-link" to='/managequestions'><strong>Admin</strong></Link>
             <Link className="dropdown-link" to='/scoreboard'><strong>Scoreboard</strong></Link>
             <Link className="dropdown-link" to='/about'><strong>About us</strong></Link>
           </div>
