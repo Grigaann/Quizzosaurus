@@ -15,12 +15,12 @@ import axios from 'axios';
 
 export default function ManageQuestions() {
     const { data: allQuestions, error } = useFetch(`${process.env.REACT_APP_API_URL}/api/fetchQuestions`);
-    const [totalPages, startIndex, endIndex, currIndex, setCurrIndex, perPage] = usePagination(10, allQuestions ? allQuestions.length : 0);
     const [currentPage, setCurrentPage] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [extendedIds, setExtendedIds] = useState([]);
     const [isAddQuestionOpen, setIsAddQuestionOpen] = useState(false);
     const [isEditQuestionOpen, setIsEditQuestionOpen] = useState({ state: false, qestionID: null });
+    const [loading, setLoading] = useState(true);
 
     const filteredQuestions = useMemo(() => {
         if (!allQuestions) {
@@ -32,23 +32,28 @@ export default function ManageQuestions() {
         );
     }, [allQuestions, searchTerm]);
 
+    const [totalPages, startIndex, endIndex, currIndex, setCurrIndex, perPage] = usePagination(10, filteredQuestions ? filteredQuestions.length : 0);
+
     useEffect(() => {
         if (filteredQuestions) {
             setCurrentPage(filteredQuestions.slice(startIndex, endIndex + 1));
         }
     }, [filteredQuestions, startIndex, endIndex]);
 
+    useEffect(() => {
+        if (filteredQuestions) {
+            setLoading(false);
+        }
+    }, [filteredQuestions]);
+
     const handleSearch = (newSearchTerm) => {
         setSearchTerm(newSearchTerm);
     };
-    useEffect(() => {
-        setCurrIndex(1);
-        // eslint-disable-next-line
-    }, [searchTerm]);
 
     const openAddQuestionForm = () => {
         setIsAddQuestionOpen(true);
     };
+
     const closeAddQuestionForm = () => {
         setIsAddQuestionOpen(false);
     };
@@ -56,6 +61,7 @@ export default function ManageQuestions() {
     const openEditQuestionForm = (id) => {
         setIsEditQuestionOpen({ state: true, questionID: id });
     };
+
     const closeEditQuestionForm = () => {
         setIsEditQuestionOpen({ state: false, questionID: null });
     };
@@ -77,22 +83,22 @@ export default function ManageQuestions() {
         <>
             <Header />
             <SearchBar onSearch={handleSearch} />
-            <button id="action-btn" onClick={openAddQuestionForm}>Add Question</button>
+            {loading && <p>Loading questions...</p>}
+            {!loading && allQuestions && (
+                <>
+                    <button id="action-btn" onClick={openAddQuestionForm}>Add Question</button>
 
-            <section id='question-container' className={(isAddQuestionOpen || isEditQuestionOpen.state) ? 'blurred' : ''}>
-                {allQuestions === null ? (
-                    <p>Error loading questions.</p>
-                ) : (
-                    <>
-                        {filteredQuestions.length <= perPage ? <></>
-                            : <Pagination
+                    <section id='question-container' className={(isAddQuestionOpen || isEditQuestionOpen.state) ? 'blurred' : ''}>
+                        {filteredQuestions.length <= perPage ? <></> : (
+                            <Pagination
                                 currIndex={currIndex}
                                 setCurrIndex={setCurrIndex}
                                 totalPages={totalPages}
                                 setCurrentPage={setCurrentPage}
-                                allQuestions={allQuestions}
+                                allQuestions={currentPage}
                                 perPage={perPage}
-                            />}
+                            />
+                        )}
                         <QuestionList
                             questions={currentPage}
                             extendedIds={extendedIds}
@@ -100,20 +106,20 @@ export default function ManageQuestions() {
                             openEditQuestionForm={openEditQuestionForm}
                             handleDelete={handleDelete}
                         />
-                        {filteredQuestions.length <= perPage ? <></>
-                            : <Pagination
+                        {filteredQuestions.length <= perPage ? <></> : (
+                            <Pagination
                                 currIndex={currIndex}
                                 setCurrIndex={setCurrIndex}
                                 totalPages={totalPages}
                                 setCurrentPage={setCurrentPage}
-                                allQuestions={allQuestions}
+                                allQuestions={currentPage}
                                 perPage={perPage}
-                            />}
-                    </>
-                )}
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-            </section>
-
+                            />
+                        )}
+                    </section>
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                </>
+            )}
             {isAddQuestionOpen && (
                 <AddQuestionForm onClose={closeAddQuestionForm} />
             )}
