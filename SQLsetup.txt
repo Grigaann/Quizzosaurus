@@ -8,7 +8,7 @@ CREATE TABLE users(
     admin BOOLEAN NOT NULL,
     elo int not null
 );
-INSERT INTO Users (username, email, password, admin, elo) VALUES ("admin", "ad.min@allrights.com", "free_EntryPass01", 1, 0);
+INSERT INTO Users (username, email, password, admin, elo) VALUES ("admin", "ad.min@allrights.com", "$2a$10$hQfuusXeZ//Ltcu30DQL0.F0ze4Y1R.QUHA.GYcqt2vVlGj4C8NMC", 1, 0);
 
 
 
