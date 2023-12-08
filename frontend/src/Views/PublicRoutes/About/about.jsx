@@ -3,7 +3,7 @@ import React from 'react';
 import Footer from '../../Components//Footer/footer';
 import Header from '../../Components/Header/header';
 
-import brachio from '../../../images/brachio.png'
+import trex from '../../../images/trex.png'
 
 import './about.css';
 
@@ -12,11 +12,11 @@ export default function About() {
         <div className="about">
             <Header />
             <h2 id="whatis">What is Quizzozaurus ?</h2>
-            <img src={brachio} id="brachio" alt="brachio" />
+            <img src={trex} id="trex" alt="brachio" />
             <p className="quizzozaure"><br />Quizzozaurus is an online quizz on the creatures
-                living on Earth living million of years before us humans.</p>
+                living on Earth millions of years before us humans.</p>
             <br />
-            <p className="quizzozaure"><strong>Test your knowledge</strong><br /> about these anthics creatures and compete for the 1st on the scoreboard !</p>
+            <p className="quizzozaure"><strong>Test your knowledge</strong><br /> about these anthics creatures and compete for the 1st place on the scoreboard !</p>
             <h2 id="team">The Team</h2>
             <p id="teampres">
                 Ylan, Max and Maxime are the students who developped this website.<br /><br />
