@@ -39,7 +39,7 @@ export default function Quiz() {
             },
             { withCredentials: true })
             .then((updated) => {
-                document.getElementById('answer' + question_OBJ.correct).classList.add('good_answer')
+                document.getElementById('answer' + question_OBJ.correct).classList.add('good_answer');
                 if (!updated.data.userAns)
                     document.getElementById('answer' + key).classList.add("wrong_answer");
                 setStreak(updated.data.streak);
@@ -66,18 +66,16 @@ export default function Quiz() {
                 {question_OBJ !== null && <div id="question-asked">{question_OBJ.question}</div>}
                 {question_OBJ !== null && (
                     <div id="possible-answers">
-                        {Object.keys(question_OBJ).map((col) => {
-                            if (col.includes("res")) {
-                                let key = col.slice(-1);
-                                if(Object.className="good_answer"){
-                                }
-                                return (
-                                    <button key={key} className="answer" id={"answer" + key} onClick={() => handleClick(key)} disabled={isLoading}>
-                                        {question_OBJ[col]}
-                                    </button>
-                                    
-                                );
-
+                        {Object.keys(question_OBJ).map((items) => {
+                            if (Array.isArray(question_OBJ[items])) {
+                                return question_OBJ[items].map((item) => {
+                                    const key = item.res;
+                                    return (
+                                        <button key={key} className="answer" id={"answer" + key} onClick={() => handleClick(key)} disabled={isLoading}>
+                                            {item.text}
+                                        </button>
+                                    );
+                                });
                             }
                             return null;
                         })}

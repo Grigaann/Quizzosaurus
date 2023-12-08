@@ -1,24 +1,61 @@
 form {
-    width:220px;
+  margin: auto;
+  width: 220px;
+  padding: 10px;
+  border: 3px solid #f1f1f1;
+  border-radius: 5px 5px 5px 5px;
+  background-color: beige;
+  border: 3px solid rgb(206, 206, 173);
 }
 
 #titleform {
     text-align: center;
 }
 
-#reglink {
-    text-align:center;
-    margin-top:1%;
-  }
+input[type=text],
+input[type=email],
+input[type=password] {
+  border-radius: 5px 5px 5px 5px;
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
 
-  @media only screen and (min-width: 480px) {
-    #logform{
-      margin-top:10%;
-    }
+.btn-form {
+  border-radius: 5px 5px 5px 5px;
+  background-color: rgb(165, 97, 42);
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+#reglink {
+  text-align: center;
+  margin-top: 1%;
+}
+
+#logform {
+  margin-top: 10%;
+}
+
+@media only screen and (min-width: 480px) {
+  #logform{
+    margin-top:10%;
   }
-    
-    @media only screen and (max-width: 480px) {
-    #logform{
-        margin-top:30%;
-      }
+}
+
+@media only screen and (max-width: 480px) {
+  #logform{
+    margin-top:30%;
   }
+}

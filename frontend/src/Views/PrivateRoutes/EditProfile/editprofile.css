@@ -2,22 +2,28 @@
     margin-top: 5%;
 }
 
+  .button-form {
+      background-color: rgb(165, 97, 42);
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+  }
+
 #discharge {
     text-align: center;
     margin-top: 1%;
 }
 
 @media only screen and (min-width: 480px) {
-
-    /* styles for devices with a minimum screen width of 480px */
     #editform {
         margin-top: 5%;
     }
 }
 
 @media only screen and (max-width: 480px) {
-
-    /* styles for devices with a maximum screen width of 480px */
     #editform {
         margin-top: 15%;
     }

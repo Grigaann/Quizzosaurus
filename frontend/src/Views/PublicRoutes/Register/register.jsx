@@ -33,19 +33,19 @@ export default function Register() {
                 <h2 id="titleformreg">Sign Up</h2>
                 <label>
                     Username:
-                    <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} autoComplete='off' required />
+                    <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} placeholder='Thisisyou' required />
                 </label>
                 <label>
                     Email:
-                    <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete='off' required />
+                    <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder='example@domain.com' required />
                 </label>
                 <label>
                     Password:
-                    <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete='off' required />
+                    <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder='Pass_word01!' required />
                 </label>
                 <label>
                     Confirm Password:
-                    <input type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete='off' required />
+                    <input type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} placeholder='Pass_word01!' required />
                 </label>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 <button className="button-form" type="submit" disabled={loading}><strong>Sign in</strong></button>

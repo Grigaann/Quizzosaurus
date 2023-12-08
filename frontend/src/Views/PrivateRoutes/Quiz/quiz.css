@@ -39,7 +39,7 @@
 
 
 .good_answer {
-    background-color: #228B22 !important;
+    background-color: #228B22;
 }
 
 .wrong_answer {
@@ -122,4 +122,3 @@ button.shake{
     }
 
 }
-
