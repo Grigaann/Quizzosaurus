@@ -68,7 +68,7 @@ export const login = async (user, setError) => {
 
 export const editprofile = async ({ user }, chgpwd, setError) => {
   try {
-    const response = await axios.post(
+    const response = await axios.put(
       `${process.env.REACT_APP_API_URL}/api/edit_profile`,
       {
         user: {

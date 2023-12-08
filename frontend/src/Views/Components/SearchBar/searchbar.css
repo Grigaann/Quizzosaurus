@@ -1,0 +1,25 @@
+#search-bar {
+    all: initial;
+    float: right;
+    position: absolute;
+    top: 10%;
+    right: 10%
+}
+
+#search-input {
+    outline: none;
+    position: relative;
+    width: 40vh;
+    padding-left: 3%;
+    border-radius: 15px;
+    border: 1px solid black;
+    transition: all .3s cubic-bezier(0, 0, 0.43, 1);
+    transition-property: width;
+}
+
+#search-input:focus {
+    border-color: rgb(254, 168, 134);
+    box-shadow: 0 0 0 .25rem rgba(253, 157, 13, 0.251);
+    outline: 0;
+    width: 75vh;
+}

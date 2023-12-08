@@ -62,7 +62,6 @@ export default function EditProfile() {
                     Email:
                     <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete='off' required />
                 </label>
-                {/* <input type="checkbox" checked={displayPwds} onChange={()=> setDisplayPwds(!displayPwds)} /> */}
                 <SimiliCheckBox text=" Change password" active={displayPwds} effect={setDisplayPwds} />
                 {displayPwds && <>
                     <label>

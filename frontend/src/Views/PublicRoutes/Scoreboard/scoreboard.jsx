@@ -9,11 +9,6 @@ import Footer from '../../Components/Footer/footer';
 
 import './scoreboard.css';
 
-import { Chart } from 'react-chartjs-2'
-import { BarElement, Chart as ChartJS } from 'chart.js/auto'
-
-
-
 
 export default function Scoreboard() {
     var data = {
