@@ -28,8 +28,18 @@ export default function AdminAcces({ children }) {
         window.location.assign("/");
       }, 2000);
       return (
-        <div>
-          Sorry, you need to be an admin to go further down this way{dot}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            fontSize: "2em",
+            color: "#333",
+            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+          }}
+        >
+          Sorry, you need to be an admin to go further down this way.
         </div>
       );
     })(".")

@@ -1,5 +1,7 @@
 import React from "react";
 
+import './pagination.css'
+
 export default function Pagination({ currIndex, setCurrIndex, totalPages, setCurrentPage, allQuestions, perPage }) {
     const handlePrev = () => {
         setCurrIndex(currIndex - 1);

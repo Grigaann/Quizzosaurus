@@ -39,6 +39,8 @@ export const EditQuestionForm = ({ questionID, onClose }) => {
         });
         setFormData(reset);
         onClose();
+        window.location.reload();
+
     };
 
     const handleCancel = () => {

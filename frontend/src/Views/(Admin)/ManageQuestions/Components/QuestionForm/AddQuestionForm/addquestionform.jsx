@@ -32,6 +32,7 @@ export const AddQuestionForm = ({ onClose }) => {
         setFormData(reset);
 
         onClose();
+        window.location.reload();
     };
 
     const handleCancel = () => {

@@ -16,5 +16,5 @@ export const usePagination = (perPage, totalPages) => {
     else setEndIndex(end_index);
   };
 
-  return [pageNb, startIndex, endIndex, currIndex, display];
+  return [pageNb, startIndex, endIndex, currIndex, display, perPage];
 };
