@@ -16,7 +16,7 @@ export default function Quiz() {
     const [streak, setStreak] = useState(() => Number(localStorage.getItem('streak')) || 0);
     const [confetti, setConfetti] = useState(false);
     const [showTrashTalk, setShowTrashTalk] = useState(false);
-    const { data: question_OBJ, error } = useFetch(`${process.env.REACT_APP_API_URL}/api/getRandomQuestion`);
+    const { data: question_OBJ, error } = useFetch(`${process.env.REACT_APP_API_URL}/api/getQuestion`);
     const trashTalkSentences = [
         "You really didn't do your homework, did you?",
         "Are you doing it on purpose ?",
@@ -25,7 +25,7 @@ export default function Quiz() {
         "Who needs correct answers when you’ve got style?",
         "Remember, it’s not about winning, it’s about… Oh wait, it is."
     ];
-    
+
     useEffect(() => {
         localStorage.setItem('streak', streak);
     }, [streak]);
@@ -47,7 +47,7 @@ export default function Quiz() {
                     setConfetti(true);
                 }
                 if (updated.data.streak < 0 && updated.data.streak % 5 === 0) {
-                    setShowTrashTalk(true); 
+                    setShowTrashTalk(true);
                 } else {
                     setShowTrashTalk(false);
                 }
@@ -58,7 +58,7 @@ export default function Quiz() {
     };
 
     return (
-        <>      
+        <>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"></link>
             <Header />
             <section id="quiz-container">
@@ -80,7 +80,7 @@ export default function Quiz() {
                             return null;
                         })}
                     </div>
-                )}                
+                )}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 <div className="trash">
                     {showTrashTalk && <p id="trashtalk"><strong>{trashTalkSentences[Math.floor(Math.random() * trashTalkSentences.length)]}</strong></p>}

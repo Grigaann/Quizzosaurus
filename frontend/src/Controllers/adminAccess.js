@@ -23,7 +23,7 @@ export default function AdminAcces({ children }) {
   ) : valid === true ? (
     children
   ) : (
-    ((dot) => {
+    (() => {
       setTimeout(() => {
         window.location.assign("/");
       }, 2000);
@@ -42,6 +42,6 @@ export default function AdminAcces({ children }) {
           Sorry, you need to be an admin to go further down this way.
         </div>
       );
-    })(".")
+    })()
   );
 }

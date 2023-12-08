@@ -3,6 +3,10 @@ import React, { useEffect } from 'react';
 import axios from "axios";
 
 import { Bar } from "react-chartjs-2"
+// eslint-disable-next-line
+import { Chart } from 'react-chartjs-2'
+// eslint-disable-next-line
+import { BarElement, Chart as ChartJS } from 'chart.js/auto'
 
 import Header from '../../Components/Header/header';
 import Footer from '../../Components/Footer/footer';
@@ -37,7 +41,7 @@ export default function Scoreboard() {
             } catch (err) { console.log(err); }
         }
         fetchData()
-    }, []);
+    }, [data.datasets, data.labels]);
 
     const options = {
         maintainAspectRatio: false,

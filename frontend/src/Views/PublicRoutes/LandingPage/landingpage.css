@@ -10,7 +10,7 @@
   width: auto;
 }
 
-.par {
+#par {
   font-size: 28px;
   display: block;
   text-align: center;
@@ -22,7 +22,7 @@
   align-items: center;
 }
 
-.btns button {
+.btn-auth {
   align-self: center;
   margin: 2%;
   margin-left: 5px;
@@ -30,7 +30,9 @@
   width: auto;
   padding: 5px;
   background-color: transparent;
+  text-decoration: none;
 }
+
 
 a {
   text-decoration: none;
@@ -42,9 +44,6 @@ a:hover {
 }
 
 
-
-
-
 #hiddenlink:hover {
   cursor: context-menu;
 }
@@ -54,7 +53,7 @@ a:hover {
     margin-top: 10%;
   }
 
-  #btnlog {
+  #btn-play {
     margin-top:2%;
     border: solid 2px rgb(183, 165, 107);
     border-radius:10px;
@@ -62,11 +61,11 @@ a:hover {
     padding:4px;
     background-color: rgb(212, 196, 145);
   }
-  #btnlog {
-    transition: transform 0.5s ease-in-out; /* Adjust the time as needed */
+  #btn-play {
+    transition: transform 0.5s ease-in-out;
   }
   
-  #btnlog:hover {
+  #btn-play:hover {
     border: solid 2px rgb(160, 144, 89);
     text-decoration: none;
     background-color: rgb(186, 169, 114);
@@ -79,7 +78,7 @@ a:hover {
     margin-top: 30%;
   }
   
-  #btnlog {
+  #btn-play {
     margin-top:5%;
     border: solid 2px rgb(183, 165, 107);
     border-radius:10px;

@@ -63,12 +63,14 @@ app.get("/api/validateAdmin", async (req, res) => {
   try {
     const userId = verifyToken(req.cookies.token);
     if (!userId) {
-      return res.status(401).json({ error: "Invalid token. Unauthorized." });
+      return res
+        .status(401)
+        .json({ isAdmin: 0, error: "Invalid token. Unauthorized." });
     }
 
     const user = await getUserByID(userId);
     if (!user) {
-      return res.status(404).json({ error: "User not found." });
+      return res.status(404).json({ isAdmin: 0, error: "User not found." });
     }
 
     res.json({ isAdmin: user.admin });
@@ -256,7 +258,7 @@ app.post("/api/logout", (req, res) => {
     return res.status(401).json({ error: "Token doesn't exist." });
   }
 
-  res.status(202).clearCookie("token").json({ redirection: "/authenticate" });
+  res.status(202).clearCookie("token").json({ redirection: "/" });
 });
 
 //------- Delete User query -------
@@ -265,7 +267,7 @@ app.delete("/api/delete_user", (req, res) => {
   if (token) {
     db.query("DELETE FROM users WHERE id=?", [token], (err) => {
       if (err) throw err;
-      res.status(202).clearCookie("token").json({ redirection: "/profile" });
+      res.status(202).clearCookie("token").json({ redirection: "/" });
     });
   } else {
     return res.status(401).json({ error: "Token doesn't exist." });
