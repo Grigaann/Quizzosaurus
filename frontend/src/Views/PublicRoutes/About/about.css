@@ -19,7 +19,7 @@
   font-size:18px;
   margin: auto;
   text-align: center;
-  width:80%;
+  width:60%;
   padding: 10px;
 }
 
@@ -35,4 +35,43 @@
   width:80%;
   padding: 10px;
   padding-bottom: 60px;
+}
+
+@media only screen and (min-width: 480px) {
+  .quizzozaure {
+    font-size:18px;
+    margin: auto;
+    text-align: center;
+    width:60%;
+    padding: 10px;
+  }
+  
+  #teampres {
+    font-size:18px;
+    margin: auto;
+    text-align: center;
+    width:60%;
+    padding: 10px;
+    padding-bottom: 60px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .quizzozaure {
+    font-size:18px;
+    margin: auto;
+    text-align: center;
+    width:80%;
+    padding: 10px;
+  }
+  
+  #teampres {
+    font-size:18px;
+    margin: auto;
+    text-align: center;
+    width:80%;
+    padding: 10px;
+    padding-bottom: 60px;
+  }
+
 }
