@@ -27,11 +27,11 @@ export default function Authenticate() {
                 <h2 id="titleform">Log In</h2>
                 <label>
                     Username:
-                    <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} autoComplete='off' required />
+                    <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} placeholder='Username' required />
                 </label>
                 <label>
                     Password:
-                    <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete='off' required />
+                    <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder='Password' required />
                 </label>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 <button className="button-form" type="submit" disabled={loading}><strong>Log in</strong></button>

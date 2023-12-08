@@ -61,8 +61,8 @@ export default function Profile() {
                     <p>{elo}</p>
                 </div>
                 <br />
-                <button className="button-form" onClick={logOut}><strong>Log out</strong></button>
-                <button className="button-form" color='red' onClick={DeleteAccount}><strong>Delete account</strong></button>
+                <button className="btn-form" onClick={logOut}><strong>Log out</strong></button>
+                <button className="btn-form" color='red' onClick={DeleteAccount}><strong>Delete account</strong></button>
             </div>
             <Footer />
         </>

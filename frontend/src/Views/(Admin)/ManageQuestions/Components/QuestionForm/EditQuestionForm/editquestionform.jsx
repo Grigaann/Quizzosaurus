@@ -49,7 +49,7 @@ export const EditQuestionForm = ({ questionID, onClose }) => {
     return (
         <div className="popup-container">
             <div className="popup-content">
-                <h2>Add New Question</h2>
+                <h2>Modify Question</h2>
                 <form onSubmit={handleSubmit}>
                     <label name="question_label">Question:</label>
                     <input
@@ -94,8 +94,8 @@ export const EditQuestionForm = ({ questionID, onClose }) => {
                         <option value="4">Option 4</option>
                     </select>
                     <div id="form-buttons">
-                        <button className="button-form" type="submit">Modify</button>
-                        <button className="button-form" type="button" onClick={handleCancel}>Cancel</button>
+                        <button className="btn-form" type="submit">Modify</button>
+                        <button className="btn-form" type="button" onClick={handleCancel}>Cancel</button>
                     </div>
                 </form>
             </div>

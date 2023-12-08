@@ -78,7 +78,7 @@ export default function EditProfile() {
                     </label>
                 </>}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button className="button-form" type="submit" disabled={loading}><strong>Save changes</strong></button>
+                <button className="btn-form" type="submit" disabled={loading}><strong>Save changes</strong></button>
             </form>
             <section>
                 <p id="discharge"><Link to='/profile'><strong>Discard Changes</strong></Link></p>
